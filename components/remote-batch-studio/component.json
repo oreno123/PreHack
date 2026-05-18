@@ -1,0 +1,15 @@
+{
+  "id": "remote-batch-studio",
+  "name": "Remote Batch Studio",
+  "category": "generation-review",
+  "status": "working",
+  "entry": "server.mjs",
+  "readme": "README.md",
+  "tags": [
+    "video",
+    "image",
+    "batch",
+    "review",
+    "download"
+  ]
+}

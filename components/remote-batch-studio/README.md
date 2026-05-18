@@ -8,12 +8,12 @@
 4. 只下载筛选后的保留项
 5. 顺手导出一份“下一轮重生成包”
 
-它和当前的 Next 项目页面已经解耦，后面你可以把这个文件夹当轮子单独搬走。
+它已经放进 `PreHack` 的标准组件目录里，可以作为一个长期复用的轮子继续迭代。
 
 ## 目录
 
 ```text
-remote-batch-studio/
+components/remote-batch-studio/
   config/
     providers.example.json
   data/
@@ -23,15 +23,23 @@ remote-batch-studio/
   public/
   package.json
   server.mjs
+  component.json
   README.md
 ```
 
 ## 启动
 
-在仓库根目录执行：
+### 从仓库根目录启动
 
 ```powershell
-node .\remote-batch-studio\server.mjs
+node .\components\remote-batch-studio\server.mjs
+```
+
+### 进入组件目录后启动
+
+```powershell
+cd .\components\remote-batch-studio
+node .\server.mjs
 ```
 
 默认地址：
@@ -44,7 +52,7 @@ http://127.0.0.1:3210
 
 ```powershell
 $env:REMOTE_BATCH_STUDIO_PORT="3211"
-node .\remote-batch-studio\server.mjs
+node .\components\remote-batch-studio\server.mjs
 ```
 
 ## Provider 配置
@@ -54,13 +62,13 @@ node .\remote-batch-studio\server.mjs
 第一次使用时，把：
 
 ```text
-remote-batch-studio/config/providers.example.json
+components/remote-batch-studio/config/providers.example.json
 ```
 
 复制成：
 
 ```text
-remote-batch-studio/config/providers.json
+components/remote-batch-studio/config/providers.json
 ```
 
 然后按你的接口改。
@@ -68,7 +76,7 @@ remote-batch-studio/config/providers.json
 ### 已附带的配置样例
 
 - `seedance_video`
-  - 适合现在这个项目已有的视频生成链路
+  - 适合视频生成链路
   - 走异步任务：提交后拿 `taskId`，再轮询结果
 - `image_sync_example`
   - 适合图片接口样例
@@ -176,7 +184,7 @@ $env:IMAGE_API_KEY="你的图片接口密钥"
 才会下载到：
 
 ```text
-remote-batch-studio/downloads/<batchId>/keep/
+components/remote-batch-studio/downloads/<batchId>/keep/
 ```
 
 ## 数据存放
@@ -184,7 +192,7 @@ remote-batch-studio/downloads/<batchId>/keep/
 批次和筛选状态都存在：
 
 ```text
-remote-batch-studio/data/state.json
+components/remote-batch-studio/data/state.json
 ```
 
 所以服务重启后还在。
@@ -216,13 +224,3 @@ remote-batch-studio/data/state.json
 - 增加 provider 的并发控制和重试
 - 增加 webhook 回调接入
 - 增加 S3 / OSS / R2 存档
-
-## 备注
-
-这个版本的目标是先把“远程生成 -> 本地筛选 -> 保留后下载”闭环跑通。
-
-如果你下一步要，我建议直接继续加这三件：
-
-1. `providers.json` 的 UI 配置页
-2. CSV 批量导入 prompt
-3. 筛选通过后自动触发下一轮重生成

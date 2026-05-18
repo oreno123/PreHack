@@ -1,0 +1,11 @@
+{
+  "id": "component-name",
+  "name": "Component Name",
+  "category": "tool",
+  "status": "draft",
+  "entry": "server.mjs",
+  "readme": "README.md",
+  "tags": [
+    "example"
+  ]
+}

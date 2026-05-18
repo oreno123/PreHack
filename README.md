@@ -4,51 +4,78 @@
 >
 > 预组装黑客松开发套件与即用型工具合集。
 
-## Introduction
+## What This Repo Is
 
-### English
+PreHack is not meant to be a single project.
+It is a shelf of reusable components for hackathons, fast prototypes, and short-cycle builds.
 
-A centralized collection of ready-to-use code assets, utility tools, integration wrappers, and practical delivery kits for hackathons.
-The goal is simple: spend less time rebuilding the same infrastructure, and more time on product, logic, and iteration.
+PreHack 不是单一项目仓库，而是一个长期积累的组件货架。
+每个组件都应该能被单独拿出来用，解决一个明确问题。
 
-### 中文
+## Repository Layout
 
-这里收集的是适合黑客松直接复用的代码资产、工具轮子、接口封装和交付组件。
-目标很直接：少重复造轮子，把时间花在产品、逻辑和快速迭代上。
+```text
+PreHack/
+  components/          # 真正可用的独立工具、组件、微产品
+  docs/                # 仓库规范、组件接入规则、维护说明
+  registry/            # 组件清单和索引
+  templates/           # 新组件模板
+  README.md
+```
+
+## Principles
+
+1. One component solves one clear problem.
+2. Every component must have its own README.
+3. Runtime state, secrets, logs, and downloads do not go into git.
+4. Components should be runnable on their own.
+5. The root README should stay short and act like a shelf index.
 
 ## Components
 
 ### 1. `remote-batch-studio`
 
-路径: [remote-batch-studio](./remote-batch-studio)
+- Path: [components/remote-batch-studio](./components/remote-batch-studio)
+- Type: remote generation and review tool
+- Status: working
 
-一个独立的远程批量生成与筛选工具：
+What it does:
 
-- 批量调用远程 API 生成图片或视频
-- 先只保存任务状态和远程结果 URL
-- 在本地网页里做 `留下 / 淘汰`
-- 只下载筛选通过的保留项
-- 导出下一轮重生成包
+- Batch-submit prompts to remote image or video APIs
+- Store task state and remote result URLs
+- Review results in a local web UI with `留下 / 淘汰`
+- Download only kept assets
+- Export a regeneration pack for the next round
 
-适合需要“大量生成 -> 快速筛选 -> 保留后下载”这一类工作流。
+## How To Add A New Component
 
-## Content Classification
+1. Copy [templates/component-template](./templates/component-template)
+2. Rename it under `components/<your-component-name>`
+3. Fill in the local `README.md`
+4. Add component metadata to [registry/components.json](./registry/components.json)
+5. Keep secrets and runtime files out of git
 
-- General project templates
-- Frontend and backend code wheels
-- Algorithm and utility tools
-- Third-party API wrappers
-- Hackathon practical skills
-- Quick deployment solutions
+Detailed rules are in:
 
-## Usage
+- [docs/REPO_STRUCTURE.md](./docs/REPO_STRUCTURE.md)
+- [docs/ADDING_COMPONENTS.md](./docs/ADDING_COMPONENTS.md)
 
-Clone this repo and reuse the component you need.
+## Current Registry
 
-如果你只需要某个组件，直接进入对应子目录使用即可。
+See:
 
-## Statement
+- [registry/components.json](./registry/components.json)
 
-This repository is intended to grow as a toolkit shelf rather than a single project.
+## Goal
 
-这个仓库更像一个组件货架，后面可以继续把别的预组装工具放进来。
+The long-term goal is simple:
+
+- stop rebuilding the same infrastructure
+- keep reusable wheels in one place
+- make it easy to compose a project from proven parts
+
+长期目标也很直接：
+
+- 少重复造轮子
+- 把可复用工具集中管理
+- 以后做项目时像拿积木一样组合现成组件

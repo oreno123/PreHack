@@ -1,0 +1,20 @@
+{
+  "components": [
+    {
+      "id": "remote-batch-studio",
+      "name": "Remote Batch Studio",
+      "category": "generation-review",
+      "status": "working",
+      "path": "components/remote-batch-studio",
+      "entry": "server.mjs",
+      "readme": "components/remote-batch-studio/README.md",
+      "tags": [
+        "video",
+        "image",
+        "batch",
+        "review",
+        "provider-config"
+      ]
+    }
+  ]
+}
