@@ -1,0 +1,13 @@
+# Generated files
+slides_tmp/
+*.pptx
+*.pdf
+*.log
+
+# OS / Editor
+~$*
+__pycache__/
+*.pyc
+
+# Claude Code local config
+.claude/

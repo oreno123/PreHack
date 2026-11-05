@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TOPIC}} 速览</title>
+<style>
+  /* accent 按领域气质改这四个变量即可，结构不动 */
+  :root{--ink:#21201d;--muted:#736e66;--accent:#8a5a2b;--accent-soft:#f5efe6;
+        --line:#e4e0d8;--bg:#faf9f6;--card:#fff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"PingFang SC","Microsoft YaHei","Source Han Sans SC",sans-serif;background:var(--bg);
+       color:var(--ink);line-height:1.8;max-width:880px;margin:0 auto;padding:52px 36px 64px;}
+  h1{font-family:"Source Han Serif SC","Noto Serif SC",serif;font-size:30px;font-weight:700;
+     letter-spacing:.02em;margin-bottom:6px;}
+  .meta{color:var(--muted);font-size:13px;margin-bottom:28px;}
+  .verdict{background:var(--card);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+           padding:20px 24px;font-size:15.5px;margin-bottom:36px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .verdict strong{color:var(--accent);}
+  h2{font-family:"Source Han Serif SC","Noto Serif SC",serif;font-size:20px;margin:38px 0 14px;
+     padding-bottom:8px;border-bottom:1px solid var(--line);}
+  h2 .no{color:var(--accent);margin-right:8px;font-size:15px;}
+  p{margin:10px 0;font-size:15px;}
+  table{width:100%;border-collapse:collapse;background:var(--card);font-size:14px;margin:14px 0;
+        border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  th{background:var(--accent-soft);color:var(--ink);text-align:left;padding:9px 14px;font-weight:600;
+     border-bottom:1px solid var(--line);white-space:nowrap;}
+  td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:nth-child(even) td{background:#fdfcf9;}
+  .tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:4px;
+       padding:1px 8px;font-size:12.5px;margin:0 6px 6px 0;}
+  /* 概念/品类卡片 */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0;}
+  .card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);
+        border-radius:6px;padding:16px 18px;font-size:13.5px;}
+  .card h3{font-size:15px;margin-bottom:2px;}
+  .card .en{color:var(--muted);font-size:12px;margin-bottom:8px;}
+  .card p{margin:6px 0;font-size:13.5px;line-height:1.7;}
+  .card b{color:var(--accent);}
+  /* 产业链链条 */
+  .chain{display:flex;align-items:stretch;margin:18px 0;flex-wrap:wrap;}
+  .ch{flex:1;min-width:130px;background:var(--card);border:1px solid var(--line);border-radius:6px;
+      padding:12px 14px;text-align:center;position:relative;font-size:13.5px;}
+  .ch + .ch{margin-left:26px;}
+  .ch + .ch::before{content:"→";position:absolute;left:-22px;top:50%;transform:translateY(-50%);
+      color:var(--accent);font-size:16px;font-weight:700;}
+  .ch b{display:block;font-size:14.5px;color:var(--accent);margin-bottom:3px;}
+  .ch span{color:var(--muted);font-size:12px;display:block;line-height:1.6;}
+  /* 图表容器 */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:16px 0;}
+  .chart h3{font-size:15px;margin-bottom:2px;}
+  .chart .cap{font-size:12px;color:var(--muted);margin-bottom:14px;}
+  /* 对比条形图 */
+  .bar-row{display:flex;align-items:center;margin:7px 0;font-size:13px;}
+  .bar-label{width:110px;flex-shrink:0;text-align:right;padding-right:10px;}
+  .bar-track{flex:1;position:relative;height:22px;background:#f0ede6;border-radius:3px;overflow:hidden;}
+  .bar{height:100%;background:var(--accent);border-radius:3px 0 0 3px;}
+  .bar.alt{background:#9a7b6d;}          /* 次口径/次级条 */
+  .bar.ref{background:#b9b9b9;}          /* 参考线 */
+  .bar-val{width:170px;flex-shrink:0;padding-left:10px;color:var(--muted);font-size:12.5px;}
+  /* 发散条形图（盈亏/正负） */
+  .div-row{display:flex;align-items:center;margin:7px 0;font-size:13px;}
+  .div-left,.div-right{flex:1;position:relative;height:22px;}
+  .div-left{display:flex;justify-content:flex-end;}
+  .div-bar{height:100%;border-radius:3px;}
+  .div-bar.p{background:var(--accent);}
+  .div-bar.n{background:#3d6b8e;}
+  .div-mid{width:2px;height:34px;background:var(--ink);flex-shrink:0;border-radius:1px;}
+  .div-label{width:96px;flex-shrink:0;text-align:right;padding-right:10px;}
+  .div-val{width:140px;flex-shrink:0;padding-left:10px;color:var(--muted);font-size:12.5px;}
+  /* 堆叠结构条 */
+  .stack{display:flex;height:34px;border-radius:5px;overflow:hidden;margin:12px 0 6px;}
+  .stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12.5px;white-space:nowrap;}
+  /* 热力矩阵：四档 h2c 强 / h1c 中 / h0c 弱 / hna 未查到 */
+  .heat td{text-align:center;font-size:12.5px;}
+  .heat .h2c{background:#f0dfe1 !important;}
+  .heat .h1c{background:#f7efef !important;}
+  .heat .h0c{background:#e8eef4 !important;}
+  .heat .hna{background:#f0efed !important;color:#b0aea9;}
+  .legend{font-size:12px;color:var(--muted);margin-top:6px;}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin:0 3px 0 10px;}
+  .src{list-style:none;column-count:2;column-gap:32px;margin-top:10px;}
+  .src li{font-size:12.5px;color:var(--muted);margin-bottom:9px;break-inside:avoid;line-height:1.6;}
+  .src a{color:#5a6b8c;word-break:break-all;text-decoration:none;}
+  .note{font-size:13px;color:var(--muted);background:var(--card);border:1px dashed var(--line);
+        border-radius:6px;padding:12px 16px;margin:14px 0;}
+  .judge{color:var(--muted);font-size:13px;}
+  @media print{body{padding:24px;background:#fff;}.src{column-count:1;}}
+</style>
+</head>
+<body>
+
+<h1>{{TOPIC}} 速览</h1>
+<div class="meta">{{DATE}} 侦察 · 基于 {{N}} 个来源 · domain-scout</div>
+
+<div class="verdict">
+<strong>一句话结论：</strong>{{ONE_SENTENCE_VERDICT}}
+</div>
+
+<h2><span class="no">01</span>这是什么</h2>
+<p>{{WHAT_IS_IT：定义、解决什么问题、边界}}</p>
+
+<!-- 领域核心分类/技术路线：用卡片展开原理+优缺点+代表，不点名带过 -->
+<div class="cards">
+  <div class="card">
+    <h3>{{类别/路线名}}</h3>
+    <div class="en">{{英文名/占比}}</div>
+    <p><b>原理：</b>{{...}}</p>
+    <p><b>优点：</b>{{...}}</p>
+    <p><b>缺点：</b>{{...}}</p>
+    <p><b>代表：</b>{{...}}</p>
+  </div>
+</div>
+
+<h2><span class="no">02</span>格局地图</h2>
+<!-- 产业链用链条图 -->
+<div class="chain">
+  <div class="ch"><b>{{上游}}</b><span>{{特点}}</span></div>
+  <div class="ch"><b>{{中游}}</b><span>{{特点}}</span></div>
+  <div class="ch"><b>{{下游}}</b><span>{{特点}}</span></div>
+</div>
+
+<!-- 格局区至少 2 个图表：条形图/堆叠结构条/发散图 -->
+<div class="chart">
+  <h3>{{图表标题}}</h3>
+  <div class="cap">{{口径说明 + 来源 [n]}}</div>
+  <div class="bar-row"><div class="bar-label">{{名称}}</div><div class="bar-track"><div class="bar" style="width:{{N%}}"></div></div><div class="bar-val">{{数值（增减）}}</div></div>
+  <div class="bar-row"><div class="bar-label">{{名称}}</div><div class="bar-track"><div class="bar alt" style="width:{{N%}}"></div></div><div class="bar-val">{{数值}}</div></div>
+</div>
+
+<div class="chart">
+  <h3>{{结构占比}}</h3>
+  <div class="cap">{{口径说明 + 来源 [n]，无来源拆分标[判断]}}</div>
+  <div class="stack">
+    <div style="width:{{N%};background:var(--accent);">{{A}} {{N}}%</div>
+    <div style="width:{{N%};background:#9a7b6d;">{{B}} {{N}}%</div>
+    <div style="width:{{N%};background:#d3b3b7;">{{C}} {{N}}%</div>
+  </div>
+</div>
+
+<h2><span class="no">03</span>关键概念</h2>
+<p>
+<span class="tag">{{术语}}</span>{{一句话解释}}
+</p>
+
+<h2><span class="no">04</span>主要玩家</h2>
+<table>
+<tr><th>玩家</th><th>是谁</th><th>地位 / 最新动态</th></tr>
+<tr><td>{{...}}</td><td>{{...}}</td><td>{{...}}</td></tr>
+</table>
+
+<!-- 玩家区配图：对比条形 + 热力矩阵（定性格子可溯源或标[判断]，未查到用 hna 灰格） -->
+<div class="chart">
+  <h3>{{营收/销量对比}}</h3>
+  <div class="cap">{{口径说明 + 来源 [n]}}</div>
+  <div class="bar-row"><div class="bar-label">{{名称}}</div><div class="bar-track"><div class="bar" style="width:{{N%}}"></div></div><div class="bar-val">{{数值}}</div></div>
+</div>
+
+<div class="chart">
+  <h3>玩家 × 能力 热力矩阵（{{年份}}）</h3>
+  <div class="cap">定性评估，基于来源事实的侦察方综合判断 [判断]</div>
+  <table class="heat">
+  <tr><th>玩家</th><th>{{维度1}}</th><th>{{维度2}}</th><th>{{维度3}}</th></tr>
+  <tr><td>{{...}}</td><td class="h2c">强</td><td class="h1c">中</td><td class="hna">未查到</td></tr>
+  </table>
+  <div class="legend">图例：<span class="swatch" style="background:#f0dfe1"></span>第一梯队<span class="swatch" style="background:#f7efef"></span>有竞争力<span class="swatch" style="background:#e8eef4"></span>承压/偏弱<span class="swatch" style="background:#f0efed"></span>未查到</div>
+</div>
+
+<!-- 盈亏/正负对比用发散条形 -->
+<div class="chart">
+  <h3>{{盈亏/增减对比}}</h3>
+  <div class="cap">中轴右侧正、左侧负 · 来源 [n]</div>
+  <div class="div-row"><div class="div-label">{{名称}}</div><div class="div-left"><div class="div-bar p" style="width:{{N%}}"></div></div><div class="div-mid"></div><div class="div-right"></div><div class="div-val">+{{数值}}</div></div>
+  <div class="div-row"><div class="div-label">{{名称}}</div><div class="div-left"></div><div class="div-mid"></div><div class="div-right"><div class="div-bar n" style="width:{{N%}}"></div></div><div class="div-val">-{{数值}}</div></div>
+</div>
+
+<h2><span class="no">05</span>关键数字</h2>
+<table>
+<tr><th>指标</th><th>数值（年份）</th><th>来源</th></tr>
+<tr><td>{{...}}</td><td>{{数值+口径}}</td><td>[n]</td></tr>
+</table>
+
+<h2><span class="no">06</span>争议与分歧</h2>
+<p><strong>{{争议点}}</strong>{{正反双方}}<span class="judge">[判断：...]</span></p>
+
+<h2><span class="no">07</span>入口材料</h2>
+<table>
+<tr><th>材料</th><th>为什么读</th></tr>
+<tr><td>{{...}}</td><td>{{...}}</td></tr>
+</table>
+
+<h2><span class="no">08</span>来源</h2>
+<ol class="src">
+<li><a href="{{URL}}">{{domain}} — {{标题}}</a> {{类型}} {{时间}}</li>
+</ol>
+
+<div class="note">纪律说明：所有数字均标注年份与来源编号；暂估标"暂估"，未查到标"未查到"；带 [判断] 标记的为侦察方综合推断而非来源事实。md 版本：{{TOPIC}}-brief.md</div>
+
+</body>
+</html>

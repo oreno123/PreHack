@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商 · __NAME__鼎｜范铸浮升</title>
+<style>
+  :root {
+    --bg: #17100c;
+    --ink: #e8dcc8;
+    --ink-dim: #a5947a;
+    --gold: #c9a063;
+    --gold-bright: #d8b56c;
+    --gold-line: rgba(201, 160, 99, 0.34);
+    --card: rgba(27, 27, 27, 0.92);
+    --red: #9e2b25;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Songti SC", "STSong", "Noto Serif SC", "SimSun", serif;
+    overflow: hidden;
+  }
+  #app {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 312px;
+    height: 100vh;
+    height: 100dvh;
+  }
+  #stage {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #stage canvas { display: block; width: 100%; height: 100%; }
+  #vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(ellipse at 50% 42%, transparent 52%, rgba(10, 6, 3, 0.55) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="160" height="160" filter="url(%23n)" opacity="0.05"/></svg>');
+  }
+  #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .pt-label {
+    position: absolute; transform: translate(-50%, -100%);
+    font-size: 12px; letter-spacing: 0.14em; color: var(--gold-bright);
+    background: rgba(23, 16, 12, 0.78); border: 1px solid var(--gold-line);
+    padding: 3px 9px 3px 10px; white-space: nowrap;
+  }
+  .pt-label::after {
+    content: ""; position: absolute; left: 50%; bottom: -7px; width: 1px; height: 7px;
+    background: var(--gold-line);
+  }
+  #marker {
+    position: absolute; pointer-events: none; display: none;
+    width: 14px; height: 14px; margin: -7px 0 0 -7px;
+    border: 1px solid var(--gold-bright); transform: rotate(45deg);
+    box-shadow: 0 0 12px rgba(216, 181, 108, 0.5);
+  }
+  #tooltip {
+    position: absolute; pointer-events: none; display: none;
+    font-size: 12px; letter-spacing: 0.1em; color: var(--ink);
+    background: rgba(23, 16, 12, 0.88); border: 1px solid var(--gold-line);
+    padding: 4px 10px; white-space: nowrap;
+  }
+  #loading {
+    position: fixed; inset: 0; z-index: 40;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+    transition: opacity 0.55s ease;
+  }
+  #loading .seal {
+    width: 84px; height: 84px; border: 1px solid var(--gold); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px; padding: 4px 4px 10px 10px;
+    box-shadow: inset 0 0 18px rgba(201, 160, 99, 0.16);
+  }
+  #loading p { color: var(--ink-dim); font-size: 12px; letter-spacing: 0.42em; padding-left: 0.42em; }
+  #fatal {
+    display: none; position: fixed; inset: auto 16px 16px 16px; z-index: 50;
+    background: #2a1210; border: 1px solid var(--red); color: #f0d9c8;
+    padding: 14px 18px; font-size: 13px; line-height: 1.7;
+  }
+  #rail {
+    position: relative; z-index: 10;
+    background: var(--card);
+    border-left: 1px solid var(--gold-line);
+    backdrop-filter: blur(10px);
+    display: flex; flex-direction: column;
+    overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: thin; scrollbar-color: rgba(201,160,99,.28) transparent;
+  }
+  .rail-pad { padding: 20px 20px 14px; }
+  h1 {
+    font-size: 22px; font-weight: 400; letter-spacing: 0.22em; color: var(--ink);
+  }
+  .subtitle {
+    margin-top: 7px; font-size: 11.5px; letter-spacing: 0.12em; color: var(--ink-dim); line-height: 1.8;
+  }
+  .sep { display: flex; align-items: center; gap: 10px; margin: 16px 0 10px; }
+  .sep::before, .sep::after { content: ""; flex: 1; height: 1px; background: var(--gold-line); }
+  .sep span { color: var(--gold); font-size: 10px; letter-spacing: 0.34em; padding-left: 0.34em; }
+  .views { display: flex; flex-wrap: wrap; gap: 6px; }
+  .vbtn {
+    font-family: inherit; font-size: 12px; letter-spacing: 0.1em;
+    color: var(--ink-dim); background: transparent;
+    border: 1px solid var(--gold-line); border-radius: 2px;
+    padding: 6px 10px; cursor: pointer; transition: all 0.18s ease;
+  }
+  .vbtn:hover { color: var(--gold-bright); border-color: var(--gold); }
+  .vbtn.on { color: #17100c; background: var(--gold); border-color: var(--gold); }
+  .row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+  .row label { font-size: 12px; letter-spacing: 0.1em; color: var(--ink-dim); min-width: 5.2em; }
+  .row output { font-size: 12px; color: var(--gold-bright); min-width: 4.2em; text-align: right; font-variant-numeric: tabular-nums; }
+  input[type="range"] {
+    flex: 1; appearance: none; -webkit-appearance: none; height: 2px;
+    background: linear-gradient(to right, var(--gold) 0%, var(--gold) var(--fill, 0%), rgba(201,160,99,.22) var(--fill, 0%));
+    outline: none; cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%;
+    background: #17100c; border: 1.5px solid var(--gold); cursor: pointer;
+  }
+  .toggles { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tgl {
+    font-family: inherit; font-size: 12px; letter-spacing: 0.1em;
+    color: var(--ink-dim); background: transparent;
+    border: 1px solid var(--gold-line); border-radius: 2px;
+    padding: 6px 12px; cursor: pointer; transition: all 0.18s ease;
+  }
+  .tgl:hover { color: var(--gold-bright); border-color: var(--gold); }
+  .tgl.on { color: #17100c; background: var(--gold); border-color: var(--gold); }
+  .actions { display: flex; gap: 6px; margin-top: 4px; }
+  #info {
+    border: 1px solid var(--gold-line); border-radius: 2px;
+    padding: 12px 14px; min-height: 96px; background: rgba(23, 16, 12, 0.5);
+  }
+  #info h3 { font-size: 14px; font-weight: 400; letter-spacing: 0.16em; color: var(--gold-bright); }
+  #info .cat { margin-top: 3px; font-size: 10.5px; letter-spacing: 0.3em; color: var(--red); }
+  #info p { margin-top: 8px; font-size: 12.5px; line-height: 1.85; color: var(--ink); }
+  #info .empty { color: var(--ink-dim); font-size: 12.5px; line-height: 1.85; }
+  #status {
+    margin-top: auto; padding: 10px 20px 14px;
+    border-top: 1px solid var(--gold-line);
+    font-size: 11px; letter-spacing: 0.08em; color: var(--ink-dim); line-height: 1.9;
+  }
+  #status b { color: var(--gold-bright); font-weight: 400; }
+  .hint { color: rgba(165, 148, 122, 0.72); }
+  .foot { padding: 0 20px 14px; font-size: 10.5px; letter-spacing: 0.06em; color: rgba(165, 148, 122, 0.6); line-height: 1.8; }
+  @media (max-width: 900px) {
+    #app { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+    #rail { border-left: none; border-top: 1px solid var(--gold-line); max-height: 44vh; }
+    #stage { min-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <div id="labels"></div>
+    <div id="marker"></div>
+    <div id="tooltip"></div>
+    <div id="vignette"></div>
+  </div>
+  <aside id="rail">
+    <div class="rail-pad">
+      <h1>商 · __NAME__鼎</h1>
+      <div class="subtitle">晚商柱足圆鼎 · 纹样高度场提取自实物照片<br>The Metropolitan Museum of Art 2001.210 · CC0</div>
+      <div class="sep"><span>视 角</span></div>
+      <div class="views" id="views"></div>
+      <div class="sep"><span>范 铸</span></div>
+      <div class="row">
+        <label>纹样浮升</label>
+        <input type="range" id="riseSlider" min="0" max="180" step="1" value="100">
+        <output id="riseOut">100%</output>
+      </div>
+      <div class="toggles">
+        <button class="tgl" id="sectionBtn">剖视内壁</button>
+        <button class="tgl" id="patinaBtn">出土皮色</button>
+        <button class="tgl" id="replayRiseBtn">重放浮升</button>
+        <button class="tgl" id="detachBtn">纹样脱离</button>
+      </div>
+      <div class="sep"><span>装 配</span></div>
+      <div class="row">
+        <label>爆炸深度</label>
+        <input type="range" id="explodeSlider" min="0" max="100" step="1" value="0">
+        <output id="explodeOut">0%</output>
+      </div>
+      <div class="actions">
+        <button class="vbtn" id="playBtn">▶ 播放装配</button>
+        <button class="vbtn" id="assembleBtn">归位</button>
+      </div>
+      <div class="sep"><span>显 示</span></div>
+      <div class="toggles">
+        <button class="tgl on" id="rotateBtn">自动巡游</button>
+        <button class="tgl" id="labelsBtn">构件标注</button>
+      </div>
+      <div class="sep"><span>构 件</span></div>
+      <div id="info">
+        <div class="empty">点击任意构件查看说明：<br>颈带纹饰 · 内壁 · 口沿 · 双耳 · 三柱足。<br>拖动旋转，滚轮缩放，空格播放装配。</div>
+      </div>
+    </div>
+    <div id="status">
+      <div id="statusMain">铸 造 中 …</div>
+      <div class="hint">空格 装配 · S 剖视 · 1–7 切换视角 · 点击构件看说明</div>
+    </div>
+    <div class="foot">形制按 Met 2001.210 著录比例（口径 17.1cm · 通高至耳 20.3cm）；纹样高度场由该馆藏公有领域照片经光照分离与锈色抑制提取。程序化重建，非扫描数据。</div>
+  </aside>
+</div>
+<div id="loading"><div class="seal">鼎</div><p>铜 鼎 铸 造 中</p></div>
+<div id="fatal"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.183.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.183.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const stage = document.getElementById('stage');
+const labelsEl = document.getElementById('labels');
+const markerEl = document.getElementById('marker');
+const tooltipEl = document.getElementById('tooltip');
+const fatalEl = document.getElementById('fatal');
+
+function fatal(message) {
+  fatalEl.textContent = message;
+  fatalEl.style.display = 'block';
+  const loading = document.getElementById('loading');
+  if (loading) loading.style.display = 'none';
+}
+
+/* ---------------- 确定性随机 ---------------- */
+function makeRng(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
+/* ---------------- 饕餮纹带高度场（依 Met 2001.210 / DP140744 实测坐标矢量重绘，base64 内嵌） ---------------- */
+const BAND_HEIGHT_B64 = 'data:image/png;base64,__BAND_B64__';
+
+function loadBandHeight() {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement('canvas');
+      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+      const ctx = cv.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      resolve({ data: ctx.getImageData(0, 0, cv.width, cv.height), W: cv.width, H: cv.height });
+    };
+    img.onerror = () => reject(new Error('高度场数据解码失败'));
+    img.src = BAND_HEIGHT_B64;
+  });
+}
+
+/* ---------------- 器表皮色贴图（绿锈版：灰绿底 #4F5D52 / 斑驳绿 / 铜绿斑 #5E8B6E，模拟馆藏绿锈皮壳） ---------------- */
+function buildPatinaMaps(patinaOn) {
+  const W = 1024, H = 512;
+  const rng = makeRng(20260902);
+  const blobs = [];
+  for (let i = 0; i < 40; i++) {
+    blobs.push({
+      x: rng() * W,
+      y: H - Math.pow(rng(), 0.6) * H * (rng() < 0.55 ? 1 : 0.62),
+      r: 16 + rng() * 58,
+      a: 0.3 + rng() * 0.45
+    });
+  }
+
+  const colorCv = document.createElement('canvas');
+  colorCv.width = W; colorCv.height = H;
+  const cc = colorCv.getContext('2d');
+  cc.fillStyle = '#4f5d52';
+  cc.fillRect(0, 0, W, H);
+  const mottle = makeRng(77);
+  for (let i = 0; i < 1100; i++) {
+    const t = mottle();
+    const r = Math.round(64 + t * 46);
+    const g = Math.round(78 + t * 48);
+    const b = Math.round(62 + t * 42);
+    cc.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',0.07)';
+    cc.beginPath();
+    cc.arc(mottle() * W, mottle() * H, 5 + mottle() * 30, 0, Math.PI * 2);
+    cc.fill();
+  }
+  if (patinaOn) {
+    for (const b of blobs) {
+      const grad = cc.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      grad.addColorStop(0, 'rgba(94,139,110,' + b.a + ')');
+      grad.addColorStop(1, 'rgba(94,139,110,0)');
+      cc.fillStyle = grad;
+      cc.beginPath(); cc.arc(b.x, b.y, b.r, 0, Math.PI * 2); cc.fill();
+    }
+  }
+
+  const packedCv = document.createElement('canvas');
+  packedCv.width = W; packedCv.height = H;
+  const pc = packedCv.getContext('2d');
+  // g 通道 = roughness（铜胎 0.45），b 通道 = metalness（铜胎 0.9）
+  pc.fillStyle = 'rgb(0,115,230)';
+  pc.fillRect(0, 0, W, H);
+  if (patinaOn) {
+    for (const b of blobs) {
+      const grad = pc.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      grad.addColorStop(0, 'rgba(0,217,26,' + b.a + ')');
+      grad.addColorStop(1, 'rgba(0,217,26,0)');
+      pc.fillStyle = grad;
+      pc.beginPath(); pc.arc(b.x, b.y, b.r, 0, Math.PI * 2); pc.fill();
+    }
+  }
+
+  return { colorCv, packedCv };
+}
+
+/* ---------------- 高度采样（双线性） ---------------- */
+function makeSampler(info) {
+  const { data, W, H } = info;
+  return function (u, v) {
+    const x = Math.min(W - 1, Math.max(0, u * W - 0.5));
+    const y = Math.min(H - 1, Math.max(0, (1 - v) * H - 0.5));
+    const x0 = Math.floor(x), y0 = Math.floor(y);
+    const x1 = Math.min(W - 1, x0 + 1), y1 = Math.min(H - 1, y0 + 1);
+    const fx = x - x0, fy = y - y0;
+    const g00 = data.data[(y0 * W + x0) * 4];
+    const g10 = data.data[(y0 * W + x1) * 4];
+    const g01 = data.data[(y1 * W + x0) * 4];
+    const g11 = data.data[(y1 * W + x1) * 4];
+    const top = g00 + (g10 - g00) * fx;
+    const bot = g01 + (g11 - g01) * fx;
+    return (top + (bot - top) * fy) / 255;
+  };
+}
+
+/* ---------------- 器壁：实物高度场浮升壳层（纹带按器身高度 y 映射 + crest 顶点色） ---------------- */
+function buildReliefShell(profilePts, bandInfo, opts) {
+  const geo = new THREE.LatheGeometry(profilePts, 1152);
+  const uv = geo.attributes.uv;
+  const pos = geo.attributes.position;
+  const nor = geo.attributes.normal;
+  const count = pos.count;
+  const sample = makeSampler(bandInfo);
+  const y0 = opts.bandY[0], y1 = opts.bandY[1];
+
+  const basePos = new Float32Array(pos.array);
+  const baseNor = new Float32Array(nor.array);
+  const heights = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    const ty = (pos.getY(i) - y0) / (y1 - y0);
+    if (ty <= 0 || ty >= 1) { heights[i] = 0; continue; }
+    heights[i] = sample((uv.getX(i) + opts.bandUShift) % 1, ty);
+  }
+
+  const colors = new Float32Array(count * 3).fill(1);
+  const colAttr = new THREE.BufferAttribute(colors, 3);
+  geo.setAttribute('color', colAttr);
+
+  const P = profilePts.length;
+  const COLS = 1153;
+
+  function fixSeamNormals() {
+    for (let j = 0; j < P; j++) {
+      const i0 = j;
+      const i1 = (COLS - 1) * P + j;
+      const nx = (nor.getX(i0) + nor.getX(i1)) / 2;
+      const ny = (nor.getY(i0) + nor.getY(i1)) / 2;
+      const nz = (nor.getZ(i0) + nor.getZ(i1)) / 2;
+      nor.setXYZ(i0, nx, ny, nz);
+      nor.setXYZ(i1, nx, ny, nz);
+    }
+    nor.needsUpdate = true;
+  }
+
+  const mesh = new THREE.Mesh(geo, opts.material);
+  mesh.castShadow = true;
+  mesh.userData.relief = {
+    update(rise) {
+      const amp = opts.amp * (opts.inward ? -1 : 1);
+      const arr = pos.array;
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        const q = heights[i] * rise;
+        const d = q * amp;
+        arr[i3] = basePos[i3] + baseNor[i3] * d;
+        arr[i3 + 1] = basePos[i3 + 1] + baseNor[i3 + 1] * d;
+        arr[i3 + 2] = basePos[i3 + 2] + baseNor[i3 + 2] * d;
+        // crest 露亮铜、地纹沉暗：随浮升逐渐分化
+        const lum = 1 + rise * (0.46 + 0.74 * Math.pow(q, 0.7) - 1);
+        colors[i3] = lum * 1.03;
+        colors[i3 + 1] = lum * 0.985;
+        colors[i3 + 2] = lum * 0.93;
+      }
+      pos.needsUpdate = true;
+      colAttr.needsUpdate = true;
+      geo.computeVertexNormals();
+      fixSeamNormals();
+    }
+  };
+  return mesh;
+}
+
+/* ---------------- 纹样脱离壳：只含带区的独立浮雕环带 ---------------- */
+function buildBandShell(profilePts, bandInfo, opts) {
+  const seg = profilePts.filter(p => p.y >= opts.bandY[0] - 2.5 && p.y <= opts.bandY[1] + 2.5);
+  const geo = new THREE.LatheGeometry(seg, 1152);
+  const uv = geo.attributes.uv;
+  const pos = geo.attributes.position;
+  const nor = geo.attributes.normal;
+  const count = pos.count;
+  const sample = makeSampler(bandInfo);
+  const y0 = opts.bandY[0], y1 = opts.bandY[1];
+
+  const basePos = new Float32Array(pos.array);
+  const baseNor = new Float32Array(nor.array);
+  const heights = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    const ty = (pos.getY(i) - y0) / (y1 - y0);
+    if (ty <= 0 || ty >= 1) { heights[i] = 0; continue; }
+    heights[i] = sample((uv.getX(i) + opts.bandUShift) % 1, ty);
+  }
+  const colors = new Float32Array(count * 3).fill(1);
+  const colAttr = new THREE.BufferAttribute(colors, 3);
+  geo.setAttribute('color', colAttr);
+
+  const mesh = new THREE.Mesh(geo, opts.material);
+  mesh.castShadow = true;
+  mesh.visible = false;
+  mesh.userData.relief = {
+    update(rise) {
+      const amp = opts.amp;
+      const arr = pos.array;
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        const q = heights[i] * rise;
+        const d = q * amp;
+        arr[i3] = basePos[i3] + baseNor[i3] * d;
+        arr[i3 + 1] = basePos[i3 + 1] + baseNor[i3 + 1] * d;
+        arr[i3 + 2] = basePos[i3 + 2] + baseNor[i3 + 2] * d;
+        const lum = 1 + rise * (0.46 + 0.74 * Math.pow(q, 0.7) - 1);
+        colors[i3] = lum * 1.03;
+        colors[i3 + 1] = lum * 0.985;
+        colors[i3 + 2] = lum * 0.93;
+      }
+      pos.needsUpdate = true;
+      colAttr.needsUpdate = true;
+      geo.computeVertexNormals();
+    }
+  };
+  return mesh;
+}
+
+/* ---------------- 轮廓曲线重采样 ---------------- */
+function resampleProfile(raw, n) {
+  const curve = new THREE.CatmullRomCurve3(
+    raw.map(p => new THREE.Vector3(p[0], p[1], 0)),
+    false, 'catmullrom', 0.5
+  );
+  return curve.getSpacedPoints(n).map(p => new THREE.Vector2(Math.max(0.02, p.x), p.y));
+}
+
+/* ---------------- 全局状态 ---------------- */
+const appState = {
+  riseTarget: 1, riseShown: 0, riseIntroDelay: 0.55,
+  detachTarget: 0, detachShown: 0,
+  explodeTarget: 0, explodeCurrent: 0,
+  sectionTarget: 0, sectionCurrent: 0,
+  autoRotate: true, showLabels: false, patina: true,
+  selection: null, hover: null,
+  playPhase: null, playT: 0, playFrom: 0,
+  viewIndex: 0, needsFinalExplodeFit: false
+};
+
+let renderer, scene, camera, controls, camTween = null;
+let clipPlane, dingMaterials = [];
+let riseMorphDirty = true;
+const parts = [];
+const selectables = [];
+let raycaster, pointer = new THREE.Vector2(), downXY = null;
+const clockWords = { timer: null };
+
+/* ---------------- 材质体系 ---------------- */
+function bronzeMaterial(patinaMaps, useVertexColors) {
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    map: patinaMaps.colorTex,
+    roughnessMap: patinaMaps.packedTex,
+    metalnessMap: patinaMaps.packedTex,
+    metalness: 1.0,
+    roughness: 1.0,
+    side: THREE.DoubleSide,
+    vertexColors: !!useVertexColors,
+    envMapIntensity: 0.8
+  });
+  dingMaterials.push(mat);
+  return mat;
+}
+
+let patinaMapsCurrent;
+
+/* ---------------- 场景构建 ---------------- */
+const root = new THREE.Group();
+const partGroups = {};
+
+function buildScene(bandInfo) {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x17100c);
+  scene.fog = new THREE.Fog(0x17100c, 750, 1750);
+  root.position.y = -66;
+  scene.add(root);
+
+  // 环境
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
+  scene.environment = envRT.texture;
+  pmrem.dispose();
+
+  // 灯光
+  const hemi = new THREE.HemisphereLight(0xf3e6cd, 0x241812, 0.55);
+  scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xffe3b0, 2.5);
+  key.position.set(180, 300, 150);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.left = -200; key.shadow.camera.right = 200;
+  key.shadow.camera.top = 260; key.shadow.camera.bottom = -140;
+  key.shadow.camera.far = 900;
+  key.shadow.bias = -0.0006;
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x9fb4c8, 0.85);
+  rim.position.set(-240, 130, -190);
+  scene.add(rim);
+  // 下腹低位暖补光：治腹球暗部丢失体积感（VLM复检建议）
+  const underFill = new THREE.DirectionalLight(0xd8b892, 0.52);
+  underFill.position.set(-170, -15, 230);
+  scene.add(underFill);
+  // 右后侧 kicker：只勾右缘轮廓线，解决与暗背景融合（VLM冲9建议）
+  const kicker = new THREE.DirectionalLight(0xc8b49a, 0.42);
+  kicker.position.set(235, 75, -210);
+  scene.add(kicker);
+  // 地面 bounce：极弱上射暖光，把腹球下半球"坐满"
+  const groundBounce = new THREE.PointLight(0xc08a5a, 0.53, 0, 0);
+  groundBounce.position.set(10, -77, 95);
+  scene.add(groundBounce);
+  // 纹带低角掠射光：从左前低位扫过饕餮带，缩略图下浮雕也能读出起伏
+  const bandRake = new THREE.SpotLight(0xffdfb0, 0.75, 0, 0.55, 0.7, 0);
+  bandRake.position.set(-200, 70, 150);
+  bandRake.target.position.set(0, 48, 45);
+  scene.add(bandRake);
+  scene.add(bandRake.target);
+  // 近景补光：随相机的弱暖光，保证颈带细部可读
+  const camFill = new THREE.PointLight(0xffe9c4, 0.58, 0, 0);
+  camFill.position.set(35, 55, 90);
+  camera.add(camFill);
+  scene.add(camera);
+
+  // 地面
+  const floorTex = makeFloorTexture();
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(620, 72),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, map: floorTex, roughness: 0.96, metalness: 0 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -78;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  const plinth = new THREE.Mesh(
+    new THREE.CylinderGeometry(148, 156, 12.6, 96),
+    new THREE.MeshStandardMaterial({ color: 0x241a13, roughness: 0.9, metalness: 0 })
+  );
+  plinth.position.y = -71.8;
+  plinth.receiveShadow = true;
+  plinth.castShadow = true;
+  scene.add(plinth);
+
+  // 器表皮色
+  patinaMapsCurrent = rebuildPatinaTextures(appState.patina);
+
+  // 器身（外壁 + 内壁 + 口沿）：比例按 Met 2001.210（口径 17.1cm，通高至耳 20.3cm）
+  // 局部坐标系：足底 y=0，口沿 y=126，耳顶 y≈145.5，最大腹径 y≈103
+  const bodyGroup = new THREE.Group();
+  root.add(bodyGroup);
+  partGroups.body = bodyGroup;
+
+  const outerPts = resampleProfile([
+    [0.02, 44], [9, 44.6], [18, 46.2], [27, 49.2], [36, 53.6],
+    [44, 59.2], [50, 66.6], [54.4, 75.2], [57.4, 85], [59.2, 95],
+    [59.8, 103.4], [59.3, 110.6], [58.1, 116], [57.1, 120],
+    [56.9, 122.6], [57.6, 124.6], [58.6, 126]
+  ], 260);
+  const outerMat = bronzeMaterial(patinaMapsCurrent, true);
+  const outerShell = buildReliefShell(outerPts, bandInfo, {
+    material: outerMat, amp: 5.0, inward: false,
+    bandY: [103, 125], bandUShift: 0.8333
+  });
+  outerShell.userData.relief.update(0);
+  bodyGroup.add(outerShell);
+
+  const bandMat = bronzeMaterial(patinaMapsCurrent, true);
+  bandMat.side = THREE.DoubleSide;
+  const bandShell = buildBandShell(outerPts, bandInfo, {
+    material: bandMat, amp: 5.0,
+    bandY: [103, 125], bandUShift: 0.8333
+  });
+  bandShell.userData.relief.update(1);
+  bodyGroup.add(bandShell);
+  window.__bandShell = bandShell;
+
+  const innerPts = resampleProfile([
+    [0.02, 47.6], [9, 48.2], [18, 49.8], [27, 52.8], [35.6, 57.4],
+    [43.2, 62.8], [49.2, 69.8], [53.8, 78.2], [56.4, 88], [57.6, 98],
+    [57.9, 106], [57.1, 112.4], [56.1, 117.4], [55.2, 121.4],
+    [54.9, 124], [55.6, 126]
+  ], 170);
+  const innerMat = bronzeMaterial(patinaMapsCurrent, true);
+  const innerShell = buildReliefShell(innerPts, bandInfo, {
+    material: innerMat, amp: 4.1, inward: true,
+    bandY: [102, 125], bandUShift: 0.8333
+  });
+  innerShell.userData.relief.update(0);
+  bodyGroup.add(innerShell);
+
+  const rimMat = bronzeMaterial(patinaMapsCurrent);
+  const rimTorus = new THREE.Mesh(new THREE.TorusGeometry(58.2, 2.4, 26, 160), rimMat);
+  rimTorus.rotation.x = Math.PI / 2;
+  rimTorus.position.y = 126;
+  rimTorus.castShadow = true;
+  bodyGroup.add(rimTorus);
+
+  registerPart({
+    mesh: outerShell, group: bodyGroup, name: '颈带 · __NAME__', category: '铸 纹',
+    stage: 1, explodeOffset: new THREE.Vector3(0, 16, 0),
+    anchor: new THREE.Vector3(46, 114, 30),
+    description: '__DESC__'
+  });
+  registerPart({
+    mesh: innerShell, group: bodyGroup, name: '内壁 · 范铸负痕', category: '铸 纹',
+    stage: 1, explodeOffset: new THREE.Vector3(0, 16, 0),
+    anchor: new THREE.Vector3(-30, 90, -20),
+    description: '内壁光素无铭（该器无铭文记录）。开启「剖视内壁」沿一耳一面的中线剖开：青铜壁厚约 3–4 毫米，外壁凸起的纹样在内壁留下对应的浅凹——这正是范铸法「外凸内凹」的负痕，也是区别于失蜡法均质壁的特征。'
+  });
+  registerPart({
+    mesh: rimTorus, group: bodyGroup, name: '口沿', category: '形 制',
+    stage: 1, explodeOffset: new THREE.Vector3(0, 16, 0),
+    anchor: new THREE.Vector3(58, 128, 4),
+    description: '平折口沿，厚边圆唇，双耳立于沿上。合范浇注的范缝多藏于沿下与足侧，是判别铸法的重要痕迹。'
+  });
+
+  // 双耳（槽形立耳，素面）
+  const earGroup = new THREE.Group();
+  root.add(earGroup);
+  partGroups.ears = earGroup;
+  const earMat = bronzeMaterial(patinaMapsCurrent);
+  const earShape = new THREE.Shape();
+  earShape.moveTo(-8.5, -7);
+  earShape.lineTo(8.5, -7);
+  earShape.quadraticCurveTo(11, -7, 11, -3.4);
+  earShape.lineTo(11, 9.6);
+  earShape.quadraticCurveTo(11, 13, 8.5, 13);
+  earShape.lineTo(-8.5, 13);
+  earShape.quadraticCurveTo(-11, 13, -11, 9.6);
+  earShape.lineTo(-11, -3.4);
+  earShape.quadraticCurveTo(-11, -7, -8.5, -7);
+  const earHole = new THREE.Path();
+  earHole.moveTo(-5.4, -2.6);
+  earHole.lineTo(5.4, -2.6);
+  earHole.lineTo(5.4, 8.6);
+  earHole.lineTo(-5.4, 8.6);
+  earHole.lineTo(-5.4, -2.6);
+  earShape.holes.push(earHole);
+  const earGeo = new THREE.ExtrudeGeometry(earShape, { depth: 4.6, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelSegments: 2 });
+  earGeo.translate(0, 0, -2.3);
+  const earMeshes = [];
+  for (const azDeg of [90, 270]) {
+    const az = THREE.MathUtils.degToRad(azDeg);
+    const g = new THREE.Group();
+    g.position.set(Math.sin(az) * 56, 132.5, Math.cos(az) * 56);
+    g.rotation.y = az;
+    g.rotation.x = -0.03;
+    const m = new THREE.Mesh(earGeo, earMat);
+    m.castShadow = true;
+    g.add(m);
+    earGroup.add(g);
+    earMeshes.push(m);
+  }
+  registerPart({
+    meshes: earMeshes, group: earGroup, name: '双耳（立耳）', category: '形 制',
+    stage: 2, explodeOffset: new THREE.Vector3(0, 52, 0),
+    anchor: new THREE.Vector3(54, 140, 4),
+    description: '槽形立耳，中开长孔，贯杠抬举之用，耳面光素。耳与三足错位布置——五点承器，抬举时受力匀称。'
+  });
+
+  // 三柱足（素面，上粗下敛，微外撇）
+  const legGroup = new THREE.Group();
+  root.add(legGroup);
+  partGroups.legs = legGroup;
+  const legMat = bronzeMaterial(patinaMapsCurrent);
+  const legPts = resampleProfile([
+    [0.02, 0], [3.2, 0], [5.0, 2.2], [6.2, 8], [7.0, 18],
+    [7.6, 30], [8.1, 42], [8.4, 48], [8.2, 52], [7.4, 54.5]
+  ], 60);
+  const legGeo = new THREE.LatheGeometry(legPts, 64);
+  const legMeshes = [];
+  for (const azDeg of [0, 120, 240]) {
+    const az = THREE.MathUtils.degToRad(azDeg);
+    const g = new THREE.Group();
+    g.position.set(Math.sin(az) * 38, 0, Math.cos(az) * 38);
+    g.quaternion.setFromAxisAngle(new THREE.Vector3(Math.cos(az), 0, -Math.sin(az)), -0.06);
+    const m = new THREE.Mesh(legGeo, legMat);
+    m.castShadow = true;
+    g.add(m);
+    legGroup.add(g);
+    legMeshes.push(m);
+  }
+  registerPart({
+    meshes: legMeshes, group: legGroup, name: '三柱足', category: '形 制',
+    stage: 0, explodeOffset: new THREE.Vector3(0, -56, 0),
+    anchor: new THREE.Vector3(-20, 30, -36),
+    description: '三柱足素面无纹，上粗下敛、足跟微展、微微外撇。垂腹配长足是晚商圆鼎的典型比例；腹下空间宽绰，便于举火炊煮。'
+  });
+
+  // 剖切平面
+  clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 320);
+  renderer.localClippingEnabled = true;
+
+  raycaster = new THREE.Raycaster();
+}
+
+let patinaTexDispose = [];
+function rebuildPatinaTextures(patinaOn) {
+  for (const t of patinaTexDispose) t.dispose();
+  patinaTexDispose = [];
+  const maps = buildPatinaMaps(patinaOn);
+  const colorTex = new THREE.CanvasTexture(maps.colorCv);
+  colorTex.colorSpace = THREE.SRGBColorSpace;
+  colorTex.wrapS = THREE.RepeatWrapping;
+  colorTex.wrapT = THREE.RepeatWrapping;
+  const packedTex = new THREE.CanvasTexture(maps.packedCv);
+  packedTex.wrapS = THREE.RepeatWrapping;
+  packedTex.wrapT = THREE.RepeatWrapping;
+  patinaTexDispose = [colorTex, packedTex];
+  return { colorTex, packedTex };
+}
+
+function applyPatinaToMaterials() {
+  const maps = patinaMapsCurrent;
+  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  maps.colorTex.anisotropy = aniso;
+  maps.packedTex.anisotropy = aniso;
+  for (const m of dingMaterials) {
+    m.map = maps.colorTex;
+    m.roughnessMap = maps.packedTex;
+    m.metalnessMap = maps.packedTex;
+    m.needsUpdate = true;
+  }
+}
+
+function makeFloorTexture() {
+  const cv = document.createElement('canvas');
+  cv.width = 512; cv.height = 512;
+  const ctx = cv.getContext('2d');
+  const grad = ctx.createRadialGradient(256, 256, 30, 256, 256, 256);
+  grad.addColorStop(0, '#3a2b1d');
+  grad.addColorStop(0.55, '#241a12');
+  grad.addColorStop(1, '#150e09');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 512);
+  const rng = makeRng(9);
+  for (let i = 0; i < 1400; i++) {
+    const g = 18 + rng() * 30;
+    ctx.fillStyle = 'rgba(' + g + ',' + (g * 0.8) + ',' + (g * 0.55) + ',0.5)';
+    ctx.fillRect(rng() * 512, rng() * 512, 1.6, 1.6);
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/* ---------------- 构件注册 ---------------- */
+function registerPart(def) {
+  const part = {
+    name: def.name, category: def.category, description: def.description,
+    group: def.group, stage: def.stage,
+    explodeOffset: def.explodeOffset,
+    anchor: def.anchor,
+    meshes: def.meshes || [def.mesh],
+    basePositions: [], baseQuats: []
+  };
+  for (const g of [def.group]) {
+    part.basePositions.push(g.position.clone());
+    part.baseQuats.push(g.quaternion.clone());
+  }
+  for (const m of part.meshes) {
+    m.userData.part = part;
+    selectables.push(m);
+  }
+  parts.push(part);
+  return part;
+}
+
+/* ---------------- 视角预设 ---------------- */
+const viewPresets = [
+  { name: '全景铜鼎', pos: [12, 82, 300], tgt: [0, 10, 0] },
+  { name: '__NAME__正面', pos: [6, 55, 104], tgt: [0, 51, 20] },
+  { name: '颈带细部', pos: [118, 66, 116], tgt: [44, 46, 30] },
+  { name: '口沿俯瞰', pos: [44, 372, 152], tgt: [0, -14, 0] },
+  { name: '剖视内壁', pos: [392, 84, 148], tgt: [0, 42, 0], section: true },
+  { name: '立耳三足', pos: [268, -26, 250], tgt: [0, 26, 0] },
+  { name: '全爆分解', fit: true }
+];
+
+function tweenCamera(toPos, toTgt, dur) {
+  camTween = {
+    fromPos: camera.position.clone(),
+    toPos: toPos.clone(),
+    fromTgt: controls.target.clone(),
+    toTgt: toTgt.clone(),
+    t: 0, dur: dur || 1.25
+  };
+}
+
+function setView(i, fromButton) {
+  appState.viewIndex = i;
+  const v = viewPresets[i];
+  if (v.section) setSection(true);
+  if (v.fit) {
+    appState.explodeTarget = 1;
+    appState.needsFinalExplodeFit = true;
+    syncExplodeUI();
+  } else {
+    tweenCamera(new THREE.Vector3().fromArray(v.pos), new THREE.Vector3().fromArray(v.tgt));
+  }
+  updateViewButtons();
+  if (fromButton) {
+    appState.playPhase = null;
+    const btn = document.getElementById('playBtn');
+    btn.textContent = '▶ 播放装配';
+  }
+}
+
+/* ---------------- 取景收敛 ---------------- */
+const fitBox = new THREE.Box3();
+const fitCenter = new THREE.Vector3();
+const fitSize = new THREE.Vector3();
+
+function fitCameraToSubject(keepDirection) {
+  root.updateMatrixWorld(true);
+  fitBox.setFromObject(root);
+  fitBox.getCenter(fitCenter);
+  fitBox.getSize(fitSize);
+  const vFov = THREE.MathUtils.degToRad(camera.fov);
+  const fitH = fitSize.y / (2 * Math.tan(vFov / 2));
+  const fitW = fitSize.x / (2 * Math.tan(vFov / 2) * camera.aspect);
+  const dist = Math.max(fitH, fitW) * 1.28;
+  let dir;
+  if (keepDirection) {
+    dir = camera.position.clone().sub(controls.target).normalize();
+  } else {
+    dir = new THREE.Vector3(0.72, 0.34, 0.72).normalize();
+  }
+  tweenCamera(fitCenter.clone().addScaledVector(dir, dist), fitCenter, 1.35);
+}
+
+/* ---------------- 爆炸 / 浮升 / 剖视 ---------------- */
+const N_STAGES = 3;
+
+function updateExplode() {
+  const a = 1 - appState.explodeCurrent;
+  for (const p of parts) {
+    const e = THREE.MathUtils.clamp(1 - a * N_STAGES + p.stage, 0, 1);
+    const eased = e * e * (3 - 2 * e);
+    const g = p.group;
+    const base = p.basePositions[0];
+    if (p.name === '三柱足' && e > 0) {
+      const dir = g.position.clone().setY(0).normalize();
+      g.position.copy(base).addScaledVector(p.explodeOffset, eased).addScaledVector(dir, 16 * eased);
+    } else {
+      g.position.copy(base).addScaledVector(p.explodeOffset, eased);
+    }
+    g.position.y += 62 * appState.explodeCurrent;
+  }
+}
+
+function setSection(on) {
+  appState.sectionTarget = on ? 1 : 0;
+  document.getElementById('sectionBtn').classList.toggle('on', on);
+}
+
+function updateSection(dt) {
+  const k = 1 - Math.pow(0.0025, dt);
+  appState.sectionCurrent += (appState.sectionTarget - appState.sectionCurrent) * k;
+  const c = appState.sectionCurrent;
+  const constant = THREE.MathUtils.lerp(320, 0, c);
+  clipPlane.constant = constant;
+  const enable = c > 0.02;
+  for (const m of dingMaterials) {
+    m.clippingPlanes = enable ? [clipPlane] : null;
+    m.needsUpdate = enable !== m.userData.wasClipped;
+    m.userData.wasClipped = enable;
+  }
+}
+
+/* ---------------- 选择 ---------------- */
+function pickAt(clientX, clientY) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(selectables, false);
+  return hits.length ? hits[0].object.userData.part : null;
+}
+
+function setEmissive(part, on) {
+  for (const m of part.meshes) {
+    const mats = Array.isArray(m.material) ? m.material : [m.material];
+    for (const mm of mats) {
+      if (on) { mm.emissive = new THREE.Color(0x6b4a14); mm.emissiveIntensity = 0.55; }
+      else { mm.emissive = new THREE.Color(0x000000); mm.emissiveIntensity = 1; }
+    }
+  }
+}
+
+function selectPart(part) {
+  if (appState.selection) setEmissive(appState.selection, false);
+  appState.selection = part;
+  const info = document.getElementById('info');
+  if (part) {
+    setEmissive(part, true);
+    markerEl.style.display = 'block';
+    info.innerHTML = '<h3>' + part.name + '</h3><div class="cat">' + part.category + '</div><p>' + part.description + '</p>';
+  } else {
+    markerEl.style.display = 'none';
+    info.innerHTML = '<div class="empty">点击任意构件查看说明：<br>颈带纹饰 · 内壁 · 口沿 · 双耳 · 三柱足。<br>拖动旋转，滚轮缩放，空格播放装配。</div>';
+  }
+}
+
+function partAnchorScreen(part) {
+  const world = part.anchor.clone();
+  part.group.localToWorld(world);
+  const p = world.project(camera);
+  if (p.z > 1) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  return {
+    x: rect.left - stage.getBoundingClientRect().left + (p.x * 0.5 + 0.5) * rect.width,
+    y: rect.top - stage.getBoundingClientRect().top + (-p.y * 0.5 + 0.5) * rect.height
+  };
+}
+
+/* ---------------- 标注 ---------------- */
+const labelEls = new Map();
+function ensureLabels() {
+  for (const p of parts) {
+    if (!labelEls.has(p)) {
+      const el = document.createElement('div');
+      el.className = 'pt-label';
+      el.textContent = p.name;
+      labelsEl.appendChild(el);
+      labelEls.set(p, el);
+    }
+  }
+}
+function updateLabels() {
+  for (const p of parts) {
+    const el = labelEls.get(p);
+    if (!appState.showLabels && !(appState.selection === p)) {
+      el.style.display = 'none';
+      continue;
+    }
+    const s = partAnchorScreen(p);
+    if (!s) { el.style.display = 'none'; continue; }
+    el.style.display = 'block';
+    el.style.left = s.x + 'px';
+    el.style.top = (s.y - 12) + 'px';
+  }
+  if (appState.selection) {
+    const s = partAnchorScreen(appState.selection);
+    if (s) {
+      markerEl.style.display = 'block';
+      markerEl.style.left = s.x + 'px';
+      markerEl.style.top = s.y + 'px';
+    } else {
+      markerEl.style.display = 'none';
+    }
+  }
+}
+
+/* ---------------- UI ---------------- */
+function updateViewButtons() {
+  document.querySelectorAll('#views .vbtn').forEach((b, i) => {
+    b.classList.toggle('on', i === appState.viewIndex);
+  });
+}
+
+function buildUI() {
+  const viewsEl = document.getElementById('views');
+  viewPresets.forEach((v, i) => {
+    const b = document.createElement('button');
+    b.className = 'vbtn';
+    b.textContent = v.name;
+    b.addEventListener('click', () => setView(i, true));
+    viewsEl.appendChild(b);
+  });
+
+  const riseSlider = document.getElementById('riseSlider');
+  riseSlider.addEventListener('input', () => {
+    appState.riseTarget = riseSlider.value / 100;
+    appState.playPhase = null;
+    document.getElementById('playBtn').textContent = '▶ 播放装配';
+    syncRiseUI();
+  });
+
+  const explodeSlider = document.getElementById('explodeSlider');
+  explodeSlider.addEventListener('input', () => {
+    appState.explodeTarget = explodeSlider.value / 100;
+    appState.needsFinalExplodeFit = appState.explodeTarget > 0.95;
+    appState.playPhase = null;
+    document.getElementById('playBtn').textContent = '▶ 播放装配';
+    syncExplodeUI();
+  });
+
+  document.getElementById('playBtn').addEventListener('click', playAssembly);
+  document.getElementById('assembleBtn').addEventListener('click', () => {
+    appState.playPhase = null;
+    appState.explodeTarget = 0;
+    setView(0);
+    syncExplodeUI();
+    document.getElementById('playBtn').textContent = '▶ 播放装配';
+  });
+  document.getElementById('sectionBtn').addEventListener('click', () => {
+    setSection(appState.sectionTarget < 0.5);
+  });
+  document.getElementById('patinaBtn').addEventListener('click', (e) => {
+    appState.patina = !appState.patina;
+    e.currentTarget.classList.toggle('on', appState.patina);
+    patinaMapsCurrent = rebuildPatinaTextures(appState.patina);
+    applyPatinaToMaterials();
+  });
+  document.getElementById('patinaBtn').classList.add('on');
+  document.getElementById('replayRiseBtn').addEventListener('click', () => {
+    appState.riseShown = 0;
+    appState.riseTarget = document.getElementById('riseSlider').value / 100;
+    riseMorphDirty = true;
+  });
+  document.getElementById('detachBtn').addEventListener('click', (e) => {
+    appState.detachTarget = appState.detachTarget > 0.5 ? 0 : 1;
+    e.currentTarget.classList.toggle('on', appState.detachTarget > 0.5);
+    detachDirty = true;
+    if (appState.detachTarget > 0.5) {
+      tweenCamera(new THREE.Vector3(46, 96, 255), new THREE.Vector3(0, 42, 0), 1.5);
+    }
+  });
+  document.getElementById('rotateBtn').addEventListener('click', (e) => {
+    appState.autoRotate = !appState.autoRotate;
+    e.currentTarget.classList.toggle('on', appState.autoRotate);
+    controls.autoRotate = appState.autoRotate;
+  });
+  document.getElementById('labelsBtn').addEventListener('click', (e) => {
+    appState.showLabels = !appState.showLabels;
+    e.currentTarget.classList.toggle('on', appState.showLabels);
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.code === 'Space') { e.preventDefault(); playAssembly(); }
+    else if (e.key === 's' || e.key === 'S') { setSection(appState.sectionTarget < 0.5); }
+    else if (e.key >= '1' && e.key <= '7') { setView(parseInt(e.key) - 1, true); }
+  });
+}
+
+function playAssembly() {
+  const btn = document.getElementById('playBtn');
+  if (appState.playPhase) {
+    appState.playPhase = null;
+    btn.textContent = '▶ 播放装配';
+    return;
+  }
+  appState.playFrom = appState.explodeTarget;
+  appState.playPhase = appState.explodeCurrent < 0.95 ? 'rise' : 'fall';
+  appState.playT = 0;
+  btn.textContent = '❚❚ 装配中 · 再按取消';
+}
+
+function syncRiseUI() {
+  const slider = document.getElementById('riseSlider');
+  slider.value = Math.round(appState.riseTarget * 100);
+  slider.style.setProperty('--fill', appState.riseTarget / 1.15 * 100 + '%');
+  document.getElementById('riseOut').textContent = Math.round(appState.riseTarget * 100) + '%';
+}
+
+function syncExplodeUI() {
+  const slider = document.getElementById('explodeSlider');
+  slider.value = Math.round(appState.explodeTarget * 100);
+  slider.style.setProperty('--fill', appState.explodeTarget * 100 + '%');
+  document.getElementById('explodeOut').textContent = Math.round(appState.explodeTarget * 100) + '%';
+}
+
+/* ---------------- 指针交互 ---------------- */
+function bindPointer() {
+  const dom = renderer.domElement;
+  dom.addEventListener('pointerdown', (e) => { downXY = [e.clientX, e.clientY]; });
+  dom.addEventListener('pointerup', (e) => {
+    if (!downXY) return;
+    const moved = Math.hypot(e.clientX - downXY[0], e.clientY - downXY[1]);
+    downXY = null;
+    if (moved > 6) return;
+    const part = pickAt(e.clientX, e.clientY);
+    selectPart(part);
+  });
+  dom.addEventListener('pointermove', (e) => {
+    const part = pickAt(e.clientX, e.clientY);
+    appState.hover = part;
+    dom.style.cursor = part ? 'pointer' : 'grab';
+    if (part && part !== appState.selection) {
+      tooltipEl.style.display = 'block';
+      tooltipEl.textContent = part.name;
+      const rect = stage.getBoundingClientRect();
+      tooltipEl.style.left = (e.clientX - rect.left + 14) + 'px';
+      tooltipEl.style.top = (e.clientY - rect.top - 8) + 'px';
+    } else {
+      tooltipEl.style.display = 'none';
+    }
+  });
+}
+
+/* ---------------- 主循环 ---------------- */
+let detachDirty = false;
+
+/* 脱离↔浮升两段式交接：0–0.45 器身浮雕沉回素地，0.45–1 脱离壳出现并外扩。
+   任一时刻带区只由一方占据，避免器身浮雕与贴壁壳互相穿透（穿模）。 */
+function detachCoupling(d) {
+  const t = Math.min(1, d / 0.45);
+  const bodyFactor = 1 - (t * t * (3 - 2 * t));
+  const u = Math.min(1, Math.max(0, (d - 0.45) / 0.55));
+  const bandOut = u * u * (3 - 2 * u);
+  return { bodyFactor, bandOut };
+}
+
+function updateRise(dt) {
+  if (appState.riseIntroDelay > 0) {
+    appState.riseIntroDelay -= dt;
+    return;
+  }
+  const k = 1 - Math.pow(0.055, dt);
+  appState.riseShown += (appState.riseTarget - appState.riseShown) * k;
+  if (Math.abs(appState.riseShown - appState.riseTarget) < 0.0015) {
+    appState.riseShown = appState.riseTarget;
+  }
+  if (riseMorphDirty || detachDirty || appState.riseShown !== appState.riseTarget) {
+    const bodyRise = appState.riseShown * detachCoupling(appState.detachShown).bodyFactor;
+    for (const p of parts) {
+      for (const m of p.meshes) {
+        if (m.userData.relief) m.userData.relief.update(bodyRise);
+      }
+    }
+    riseMorphDirty = false;
+  }
+}
+
+function updateDetach(dt) {
+  const k = 1 - Math.pow(0.045, dt);
+  appState.detachShown += (appState.detachTarget - appState.detachShown) * k;
+  if (Math.abs(appState.detachShown - appState.detachTarget) < 0.0015) {
+    appState.detachShown = appState.detachTarget;
+  }
+  if (detachDirty || appState.detachShown !== appState.detachTarget) {
+    detachDirty = false;
+    const d = appState.detachShown;
+    const band = window.__bandShell;
+    const { bodyFactor, bandOut } = detachCoupling(d);
+    band.visible = bandOut > 0.003;
+    // 1.012 起步：贴壁瞬间留出净空，既防穿模也防与器壁共面闪烁
+    const s = 1.012 + 0.438 * bandOut;
+    band.scale.set(s, 1, s);
+    if (appState.riseIntroDelay <= 0) {
+      for (const p of parts) {
+        for (const m of p.meshes) {
+          if (m.userData.relief) m.userData.relief.update(appState.riseShown * bodyFactor);
+        }
+      }
+    }
+  }
+  if (window.__bandShell && window.__bandShell.visible) {
+    window.__bandShell.rotation.y += dt * 0.12 * appState.detachShown;
+  }
+}
+
+function updateCameraTween(dt) {
+  if (!camTween) return;
+  camTween.t += dt / camTween.dur;
+  const t = Math.min(1, camTween.t);
+  const s = t * t * (3 - 2 * t);
+  camera.position.lerpVectors(camTween.fromPos, camTween.toPos, s);
+  controls.target.lerpVectors(camTween.fromTgt, camTween.toTgt, s);
+  if (t >= 1) camTween = null;
+}
+
+function updateStatus() {
+  const tri = renderer.info.render.triangles.toLocaleString();
+  document.getElementById('statusMain').innerHTML =
+    '浮升 <b>' + Math.round(appState.riseShown * 100) + '%</b>' +
+    ' · 爆炸 <b>' + Math.round(appState.explodeCurrent * 100) + '%</b>' +
+    ' · 剖视 <b>' + (appState.sectionTarget > 0.5 ? '开' : '关') + '</b>' +
+    ' · 三角面 <b>' + tri + '</b>';
+}
+
+/* ---------------- 初始化 ---------------- */
+function onResize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (w === 0 || h === 0) return;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
+async function init() {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.06;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  stage.prepend(renderer.domElement);
+
+  camera = new THREE.PerspectiveCamera(40, 1, 1, 4000);
+  camera.position.set(300, 148, 322);
+
+  buildScene(await loadBandHeight());
+
+  // 测试钩子：#risen 直接满浮雕，跳过入场（供 headless 验证）；可加 &view=N 直达机位
+  let initTgt = [0, 6, 0];
+  if (location.hash.includes('risen')) {
+    appState.riseIntroDelay = 0;
+    appState.riseShown = 1;
+    for (const p of parts) {
+      for (const m of p.meshes) {
+        if (m.userData.relief) m.userData.relief.update(1);
+      }
+    }
+    const vm = location.hash.match(/view=(\d+)/);
+    if (vm) {
+      const v = viewPresets[Math.min(viewPresets.length - 1, parseInt(vm[1]))];
+      if (v.pos) { camera.position.fromArray(v.pos); initTgt = v.tgt; }
+    }
+    if (location.hash.includes('detach')) {
+      const dm = location.hash.match(/d=([\d.]+)/);
+      const dmid = dm ? Math.min(1, Math.max(0, parseFloat(dm[1]))) : 1;
+      appState.detachTarget = dmid;
+      appState.detachShown = dmid;
+      detachDirty = true;
+      const band = window.__bandShell;
+      if (band) {
+        const cp = detachCoupling(dmid);
+        band.visible = cp.bandOut > 0.003;
+        const s = 1.012 + 0.438 * cp.bandOut;
+        band.scale.set(s, 1, s);
+        band.userData.relief.update(1);
+        for (const p of parts) {
+          for (const m of p.meshes) {
+            if (m.userData.relief) m.userData.relief.update(appState.riseShown * cp.bodyFactor);
+          }
+        }
+      }
+      if (!location.hash.match(/view=\d/)) {
+        camera.position.set(46, 96, 255);
+        initTgt = [0, 42, 0];
+      }
+    }
+  }
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(initTgt[0], initTgt[1], initTgt[2]);
+
+  // 测试钩子：#xpld 同步直达满爆炸并取景（供 headless 验证穿模）
+  if (location.hash.includes('xpld')) {
+    appState.explodeTarget = 1;
+    appState.explodeCurrent = 1;
+    updateExplode();
+    syncExplodeUI();
+    fitCameraToSubject(true);
+    if (camTween) {
+      camera.position.copy(camTween.toPos);
+      controls.target.copy(camTween.toTgt);
+      camTween = null;
+    }
+  }
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.minDistance = 70;
+  controls.maxDistance = 1000;
+  controls.maxPolarAngle = 1.54;
+
+  let idleTimer = null;
+  controls.addEventListener('start', () => {
+    camTween = null;
+    controls.autoRotate = false;
+    clearTimeout(idleTimer);
+  });
+  controls.addEventListener('end', () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      controls.autoRotate = appState.autoRotate;
+    }, 4000);
+  });
+  controls.autoRotate = appState.autoRotate;
+  controls.autoRotateSpeed = 0.5;
+
+  buildUI();
+  ensureLabels();
+  bindPointer();
+  applyPatinaToMaterials();
+  syncRiseUI();
+  syncExplodeUI();
+
+  onResize();
+  window.addEventListener('resize', onResize);
+  new ResizeObserver(onResize).observe(stage);
+
+  fitCameraToSubject(false);
+
+  clockWords.timer = new THREE.Timer();
+  clockWords.timer.connect(document);
+
+  let firstFrame = true;
+  let statusTick = 0;
+  renderer.setAnimationLoop(() => {
+    const timer = clockWords.timer;
+    timer.update();
+    const dt = Math.min(timer.getDelta(), 0.05);
+
+    // 装配播放
+    if (appState.playPhase) {
+      const T = 2.8;
+      appState.playT += dt;
+      if (appState.playPhase === 'rise') {
+        appState.explodeTarget = THREE.MathUtils.lerp(appState.playFrom, 1, Math.min(appState.playT / T, 1));
+        if (appState.playT >= T + 0.6) {
+          appState.playPhase = 'fall';
+          appState.playT = 0;
+        }
+      } else {
+        appState.explodeTarget = THREE.MathUtils.lerp(1, 0, Math.min(appState.playT / T, 1));
+        if (appState.playT >= T) {
+          appState.playPhase = null;
+          appState.explodeTarget = 0;
+          document.getElementById('playBtn').textContent = '▶ 播放装配';
+          setView(0);
+        }
+      }
+      syncExplodeUI();
+      appState.needsFinalExplodeFit = appState.explodeTarget > 0.95;
+    }
+
+    const ek = 1 - Math.pow(0.003, dt);
+    appState.explodeCurrent += (appState.explodeTarget - appState.explodeCurrent) * ek;
+    if (Math.abs(appState.explodeCurrent - appState.explodeTarget) < 0.0008) {
+      appState.explodeCurrent = appState.explodeTarget;
+    }
+    updateExplode();
+    if (appState.needsFinalExplodeFit &&
+        Math.abs(appState.explodeCurrent - appState.explodeTarget) < 0.005 &&
+        appState.explodeTarget > 0.95) {
+      fitCameraToSubject(true);
+      appState.needsFinalExplodeFit = false;
+    }
+
+    updateSection(dt);
+    updateRise(dt);
+    updateDetach(dt);
+    updateCameraTween(dt);
+    controls.update();
+    renderer.render(scene, camera);
+    updateLabels();
+    statusTick++;
+    if (statusTick % 12 === 0) updateStatus();
+
+    if (firstFrame) {
+      firstFrame = false;
+      const loading = document.getElementById('loading');
+      loading.style.opacity = '0';
+      setTimeout(() => loading.remove(), 550);
+    }
+  });
+}
+
+init().catch(err => {
+  fatal('三维初始化失败：' + err.message + '（本页需要支持 WebGL 的现代浏览器，且需联网加载 Three.js CDN）');
+  console.error(err);
+});
+</script>
+</body>
+</html>

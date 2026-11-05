@@ -18,6 +18,17 @@ Each component should:
 - be runnable without depending on sibling components
 - keep its runtime state and secrets ignored
 
+### `skills/`
+
+Full snapshot backup of global Claude Code skills (`~/.claude/skills/`).
+
+Rules:
+
+- each subdirectory is one skill, exactly as it loads in Claude Code
+- nested `.git` directories are stripped when snapshotting (upstream history is not duplicated here)
+- `skills/README.md` is the generated index table; regenerate it after adding or removing skills
+- runtime junk (eval outputs, caches) should not be committed
+
 ### `docs/`
 
 Put repo-level conventions here.

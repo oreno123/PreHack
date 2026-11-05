@@ -17,6 +17,7 @@ PreHack 不是单一项目仓库，而是一个长期积累的组件货架。
 ```text
 PreHack/
   components/          # 真正可用的独立工具、组件、微产品
+  skills/              # 全局 Claude Code skills 全量备份（唯一真相源）
   docs/                # 仓库规范、组件接入规则、维护说明
   registry/            # 组件清单和索引
   templates/           # 新组件模板
@@ -46,6 +47,16 @@ What it does:
 - Review results in a local web UI with `留下 / 淘汰`
 - Download only kept assets
 - Export a regeneration pack for the next round
+
+## Skills
+
+`skills/` 是全局 Claude Code skills（`~/.claude/skills/`）的全量备份，2026-11-05 起接管原 `skills-for-myself` 仓库，成为唯一备份真相源。
+
+- 共 220 个 skill：开发工作流、GSAP 动画、营销 60+、PPT/演示、Blender、数学建模、中文自建系列等
+- 快照时已剥除内嵌 `.git`（上游历史不重复存）
+- 完整索引见 [skills/README.md](./skills/README.md)
+- 恢复方式：把需要的目录复制回 `~/.claude/skills/`
+- 新增 skill 后同步快照进来，并重新生成索引表
 
 ## How To Add A New Component
 
