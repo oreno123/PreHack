@@ -31,4 +31,4 @@
 
 ## 案例
 
-- Kaggle 中文数据集造假坑（待补卡）
+- [2026 Kaggle 中文纹样数据集坑](../cases/2026-kaggle-dataset-scam.md)（数据集验货纪律）

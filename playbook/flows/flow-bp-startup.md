@@ -30,4 +30,5 @@
 
 ## 案例
 
-- [NOVA 三等奖](../cases/2026-nova-third-prize.md)、鸿蒙复赛（未获奖，复盘待补）
+- [NOVA 三等奖](../cases/2026-nova-third-prize.md)
+- [鸿蒙复赛未获奖](../cases/2026-hongmeng-rematch-fail.md)（评审路径分析反面教材）

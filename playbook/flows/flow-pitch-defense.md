@@ -29,4 +29,4 @@
 ## 案例
 
 - [2026 NOVA 三等奖](../cases/2026-nova-third-prize.md)（路演复盘）
-- 职业规划大赛：7 分钟陈述底稿先行（外部案例，待补卡）
+- [2026 职业规划大赛](../cases/2026-career-plan-competition.md)（AI 代笔分工 + 底稿先行）
