@@ -11,5 +11,11 @@
     "batch",
     "review",
     "download"
-  ]
+  ],
+  "stages": [2, 4],
+  "input": "prompt 列表 + config/providers.json 里的 provider 配置（不写死，可切换）",
+  "output": "data/state.json 任务状态 + downloads/ 保留素材 + data/evaluation-report.md VLM 打分报告 + 重生成导出包",
+  "use_when": "阶段 2 spike 需要批量生图验效果；阶段 4 需要批量产素材并筛优",
+  "not_for": "单张图的快速试验（直接调 API 更快）；需要精确控制每张图的场景",
+  "integration_time": "~1h（配 provider 即用）"
 }

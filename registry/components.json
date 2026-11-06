@@ -14,7 +14,59 @@
         "batch",
         "review",
         "provider-config"
-      ]
+      ],
+      "stages": [2, 4],
+      "input": "prompt 列表 + provider 配置",
+      "output": "任务状态 + 保留素材 + 评分报告 + 重生成包",
+      "use_when": "批量生图验效果 / 批量产素材筛优",
+      "not_for": "单张图快速试验",
+      "integration_time": "~1h"
+    }
+  ],
+  "planned": [
+    {
+      "id": "galaxy-scene",
+      "stages": [3, 4],
+      "input": "主题关键词或 scene 配置",
+      "output": "本地可跑 three.js 粒子场景",
+      "use_when": "需要 3D 视觉冲击的展示类作品",
+      "source": "D:\\desktop\\_blueyard_research"
+    },
+    {
+      "id": "multiplayer-server",
+      "stages": [4],
+      "input": "游戏逻辑消息协议",
+      "output": "websocket 多人同步服务端骨架",
+      "use_when": "现场多人互动类作品",
+      "source": "homework misc 分支 e09d694（moqi，云端在跑）"
+    },
+    {
+      "id": "image-pipeline",
+      "stages": [5],
+      "input": "HTML/URL/图片目录",
+      "output": "截图、PDF、VLM 选片结果、四色抖动图",
+      "use_when": "交付物图片生产链"
+    },
+    {
+      "id": "3d-print-kit",
+      "stages": [4],
+      "input": "mesh/纹样资产",
+      "output": "水密可切片 STL + 修复配方",
+      "use_when": "实物打印类交付（UC4）"
+    },
+    {
+      "id": "cn-dev-cheatsheets",
+      "stages": [2, 4],
+      "input": "-",
+      "output": "Windows 坑/API 速查/部署配方文档集",
+      "use_when": "全阶段查阅"
+    },
+    {
+      "id": "color-system-cheatsheet",
+      "stages": [3, 5],
+      "input": "-",
+      "output": "配色/字体经验卡",
+      "use_when": "设计阶段定视觉方向"
     }
   ]
 }

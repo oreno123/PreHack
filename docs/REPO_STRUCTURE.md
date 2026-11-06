@@ -18,6 +18,22 @@ Each component should:
 - be runnable without depending on sibling components
 - keep its runtime state and secrets ignored
 
+### `playbook/`
+
+The competition playbook: how a hackathon runs end to end.
+
+- `README.md` — entry point: profile card → match a flow → follow stage cards
+- `stages/0-6.md` — stage library; each card has input contract, output contract, task list, exit criteria, pitfalls, tools
+- `flows/` — five competition-type flows (48h onsite / online 2-4w / pitch defense / physical print / research report); a flow composes stages with trim/boost rules
+- `templates/` — profile card, spike report, demo script, submit checklist
+- `cases/` — post-mortem cards: result, lesson, which stage card the lesson was baked into
+
+Rules:
+
+- stages are the full definitions; flows only compose and trim them — flow files must not redefine a stage
+- every post-mortem lesson must be baked back into a stage card's "pitfalls" section, not left only in the case file
+- a case card with unfilled "待补" items is acceptable; a fabricated detail is not
+
 ### `skills/`
 
 Full snapshot backup of global Claude Code skills (`~/.claude/skills/`).

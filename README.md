@@ -16,10 +16,11 @@ PreHack 不是单一项目仓库，而是一个长期积累的组件货架。
 
 ```text
 PreHack/
+  playbook/            # 比赛作战手册：七阶段流程 + 五类比赛 flow + 模板 + 案例
   components/          # 真正可用的独立工具、组件、微产品
   skills/              # 全局 Claude Code skills 全量备份（唯一真相源）
   docs/                # 仓库规范、组件接入规则、维护说明
-  registry/            # 组件清单和索引
+  registry/            # 组件清单和索引（含 planned 候选）
   templates/           # 新组件模板
   README.md
 ```
@@ -47,6 +48,10 @@ What it does:
 - Review results in a local web UI with `留下 / 淘汰`
 - Download only kept assets
 - Export a regeneration pack for the next round
+
+## Playbook
+
+[playbook/](./playbook/README.md) 是比赛作战手册：来了一个比赛，三步开工——填画像卡 → 判型（五类之一）→ 取对应 flow。七阶段是阶段库（每张卡有输入/输出契约和退出条件），五条 flow 按比赛型裁剪（现场 48h / 线上 2-4 周 / 路演答辩 / 实物打印 / 调研报告）。打完一仗回 `playbook/cases/` 补一卡复盘，教训固化回阶段卡。
 
 ## Skills
 

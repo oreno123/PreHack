@@ -36,6 +36,24 @@ Suggested fields:
 }
 ```
 
+### 契约字段（必填）
+
+组件必须声明与 playbook 阶段的契约，六项不填全不算入架：
+
+```json
+{
+  "stages": [2],
+  "input": "它吃什么：文件/URL/配置的形态与格式",
+  "output": "它吐什么：交付物形态与落盘位置",
+  "use_when": "什么场景下取这个轮子",
+  "not_for": "什么场景别用它",
+  "integration_time": "~2h"
+}
+```
+
+- `stages`：服务于 [playbook](../playbook/README.md) 的哪些阶段（0-6，见阶段库）
+- 其余四项写人话，写得让凌晨三点的自己能看懂
+
 ## Registry Expectations
 
 Add one object to `registry/components.json` for every component.
