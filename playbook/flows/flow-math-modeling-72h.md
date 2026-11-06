@@ -26,8 +26,9 @@
 
 ## 工具
 
+- components: `mathmodel-cheatsheet`（题型识别 + 获奖套路链，赛前备卡与三题快评直接翻）
 - skills: `mathmodel-pro` 及其子件（paper-workflow-orchestrator / problem-doc-model-selector / model-code-and-result-generator / quality-assurance-auditor）、`data-cleaning-and-visualization`
 
 ## 案例
 
-- 待补（下次打完回填）
+- [数模获奖案例汇编（外部标杆）](../cases/external-mathmodeling-award-cases.md)——无亲历战绩，先用外部获奖样本的可复用套路占位，打完回填亲历卡

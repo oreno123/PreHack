@@ -26,4 +26,4 @@
 - 规划中组件：`3d-print-kit`（网格修复配方 + 纹样→STL 链）
 - [2026 大衍筮筹 3D 打印](../cases/2026-dayan-rods-3dprint.md)（成功交付）
 - [2026 掐丝器 STL 管线](../cases/2026-qiasi-stl-pipeline.md)（68 卡零失败，真机验收）
-- 龙门 iPad 展框（trimesh 改件，待补卡）
+- [2026 龙门 iPad 展框](../cases/2026-longmen-ipad-frame.md)（超幅拆件 + STL 文件级验证 + 公差留档）

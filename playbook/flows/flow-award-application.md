@@ -27,4 +27,6 @@
 
 ## 案例
 
-- 友安杯（纹脉）、校友会 AI 赛道（A4 传单+脚本）、NOVA 后期申报（均待补卡）
+- [2026 友安杯（纹脉）](../cases/2026-youanbei-wenmai.md)（存量作品叙事改造复用）
+- [2026 校友会 AI 投资赛](../cases/2026-njunta-alumni-ai-track.md)（未获奖：BP 跨赛复用必须先 diff 赛制）
+- NOVA 后期申报（待补卡）

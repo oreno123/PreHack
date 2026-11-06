@@ -73,6 +73,14 @@ What it does:
 
 配色与排版经验卡：等明度体系、NIO 字重经验、PPT 白底衬线基线与雷区清单。
 
+### 5. `mathmodel-cheatsheet`
+
+- Path: [components/mathmodel-cheatsheet](./components/mathmodel-cheatsheet)
+- Type: reference cards
+- Status: working
+
+数模竞赛速查卡（CUMCM + MCM/ICM）：九大题型与出题趋势、国美赛打法差异、12 个获奖样本的可复用套路链与开源论文资源。
+
 ## Playbook
 
 [playbook/](./playbook/README.md) 是比赛作战手册：来了一个比赛，三步开工——填画像卡 → 判型（十五型之一，复合型拼接）→ 取对应 flow。七阶段是阶段库（每张卡有输入/输出契约和退出条件），十五条 flow 分三组：交付形态（现场 48h / 线上 2-4 周 / 路演答辩 / 实物打印 / 调研报告）、专项赛型（数模 72h / 创新创业 BP / 设计征集 / 晋级制作品赛 / AI 内容创作）、赛制特色（数据竞赛 / 命题平台 / 成果报奖 / 学术论文 / 策展展示）。打完一仗回 `playbook/cases/` 补一卡复盘，教训固化回阶段卡。

@@ -1,0 +1,15 @@
+{
+  "id": "mathmodel-cheatsheet",
+  "name": "Math Modeling Cheatsheet",
+  "category": "reference",
+  "status": "working",
+  "entry": "cards/01-problem-types.md",
+  "readme": "README.md",
+  "tags": ["mathmodeling", "cumcm", "mcm", "patterns", "competition"],
+  "stages": [0, 1],
+  "input": "无（查阅型）",
+  "output": "选题快评依据 + 可套用的建模链路",
+  "use_when": "数模赛前备卡；72h 开赛 3 题快评；建模链路选型",
+  "not_for": "零基础学建模（速查卡不是教材）",
+  "integration_time": "0（翻开即用）"
+}

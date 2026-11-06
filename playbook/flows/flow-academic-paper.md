@@ -30,4 +30,5 @@
 
 ## 案例
 
-- MicroDecep（ICLR2027 在投，待 GPT-5 重判）、DEV 综述慢线（待补卡）
+- [2026 MicroDecep Bench](../cases/2026-microdecep-bench.md)（暂停未投稿：novelty 审计先行、撞车基准复现六课）
+- DEV 综述慢线（进行中，未到复盘点）

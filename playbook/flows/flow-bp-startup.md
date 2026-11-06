@@ -32,3 +32,4 @@
 
 - [NOVA 三等奖](../cases/2026-nova-third-prize.md)
 - [鸿蒙复赛未获奖](../cases/2026-hongmeng-rematch-fail.md)（评审路径分析反面教材）
+- [2026 校友会 AI 投资赛未获奖](../cases/2026-njunta-alumni-ai-track.md)（BP 跨赛复用缺口：融资章按赛制改、交付格式逐字核）
