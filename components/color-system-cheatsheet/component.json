@@ -1,0 +1,15 @@
+{
+  "id": "color-system-cheatsheet",
+  "name": "Color System Cheatsheet",
+  "category": "design-reference",
+  "status": "working",
+  "entry": "cards/color.md",
+  "readme": "README.md",
+  "tags": ["color", "typography", "ppt", "design"],
+  "stages": [3, 5],
+  "input": "无（查阅型组件），或具体项目的视觉方向问题",
+  "output": "可直接执行的设计决策（色值策略/字重方案/PPT 风格基线）",
+  "use_when": "设计阶段定视觉方向；交付物排版前定基调；配色被说'土/脏/乱'时",
+  "not_for": "品牌 VI 级别的完整色彩系统设计（这是速查不是方法论）",
+  "integration_time": "0（翻开即用）"
+}

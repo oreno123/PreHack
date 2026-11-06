@@ -21,17 +21,57 @@
       "use_when": "批量生图验效果 / 批量产素材筛优",
       "not_for": "单张图快速试验",
       "integration_time": "~1h"
+    },
+    {
+      "id": "galaxy-scene",
+      "name": "Galaxy Scene",
+      "category": "3d-visual",
+      "status": "working",
+      "path": "components/galaxy-scene",
+      "entry": "start.bat",
+      "readme": "components/galaxy-scene/README.md",
+      "tags": ["threejs", "particles", "webgl", "visual-impact", "morph"],
+      "stages": [3, 4],
+      "input": "?shape=galaxy|ding|horse&beat=1 参数；或自有 mesh 走 prep/ 烘焙管线",
+      "output": "双击即开的粒子场景页（localhost:8899）",
+      "use_when": "需要 3D 视觉冲击的展示类作品；文物/器物粒子化叙事",
+      "not_for": "后端逻辑重的工具类项目",
+      "integration_time": "~2h"
+    },
+    {
+      "id": "cn-dev-cheatsheets",
+      "name": "CN Dev Cheatsheets",
+      "category": "reference",
+      "status": "working",
+      "path": "components/cn-dev-cheatsheets",
+      "entry": "cheatsheets/windows-pits.md",
+      "readme": "components/cn-dev-cheatsheets/README.md",
+      "tags": ["windows", "encoding", "api", "deploy", "pitfalls"],
+      "stages": [2, 4],
+      "input": "无（查阅型）",
+      "output": "可抄的命令与选路决策",
+      "use_when": "环境问题/被墙/调国产API/部署验收，任何阶段随查",
+      "not_for": "Linux/macOS",
+      "integration_time": "0"
+    },
+    {
+      "id": "color-system-cheatsheet",
+      "name": "Color System Cheatsheet",
+      "category": "design-reference",
+      "status": "working",
+      "path": "components/color-system-cheatsheet",
+      "entry": "cards/color.md",
+      "readme": "components/color-system-cheatsheet/README.md",
+      "tags": ["color", "typography", "ppt", "design"],
+      "stages": [3, 5],
+      "input": "无（查阅型）",
+      "output": "可执行的设计决策（配色/字重/PPT 基线）",
+      "use_when": "定视觉方向；交付物排版前；配色被否时",
+      "not_for": "品牌 VI 级完整色彩系统",
+      "integration_time": "0"
     }
   ],
   "planned": [
-    {
-      "id": "galaxy-scene",
-      "stages": [3, 4],
-      "input": "主题关键词或 scene 配置",
-      "output": "本地可跑 three.js 粒子场景",
-      "use_when": "需要 3D 视觉冲击的展示类作品",
-      "source": "D:\\desktop\\_blueyard_research"
-    },
     {
       "id": "multiplayer-server",
       "stages": [4],
@@ -52,21 +92,8 @@
       "stages": [4],
       "input": "mesh/纹样资产",
       "output": "水密可切片 STL + 修复配方",
-      "use_when": "实物打印类交付（UC4）"
-    },
-    {
-      "id": "cn-dev-cheatsheets",
-      "stages": [2, 4],
-      "input": "-",
-      "output": "Windows 坑/API 速查/部署配方文档集",
-      "use_when": "全阶段查阅"
-    },
-    {
-      "id": "color-system-cheatsheet",
-      "stages": [3, 5],
-      "input": "-",
-      "output": "配色/字体经验卡",
-      "use_when": "设计阶段定视觉方向"
+      "use_when": "实物打印类交付（UC4）",
+      "source": "纹脉私有 research 仓（搬公开仓前须检查私有数据）"
     }
   ]
 }

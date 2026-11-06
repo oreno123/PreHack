@@ -1,0 +1,14 @@
+NOTICE — 来源与版权说明
+
+本组件是对 blueyard.com 2024 版粒子星河效果的技术考古复刻（学习研究用途）。
+
+- 原站的受版权保护资产（原始 EXR 纹理、色彩/缩放图集原图、站点源码包、
+  宣传视频）均未包含在本仓库中
+- data/pos_galaxy.f32 与 data/color.rgba 是从原站公开加载的动画数据解码
+  得到的粒子位置/颜色数值，仅作复刻研究与教学演示；如需商业使用或公开
+  部署，请先自行评估或联系 BlueYard
+- data/pos_ding.f32（青铜鼎）与 data/pos_horse.f32（翼马）由自有 3D 模型
+  经 prep/ 烘焙管线生成，无第三方版权问题
+- 自有代码（hybrid.mjs / galaxy.mjs / prep/*.py / shot_*.py）可自由复用
+
+参考：web.archive.org/web/20240530212415/https://www.blueyard.com/

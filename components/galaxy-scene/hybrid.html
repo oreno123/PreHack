@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hybrid — baked replay × HDR light pipeline</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; }
+  #hud {
+    position: fixed; left: 24px; bottom: 22px; z-index: 5; color: rgba(220,228,240,.75);
+    font-family: ui-monospace, Consolas, monospace; font-size: 11px; letter-spacing: .14em;
+    user-select: none; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; white-space: pre;
+  }
+  #hud.on { opacity: 1; }
+  #ecg {
+    position: fixed; right: 24px; bottom: 22px; z-index: 5;
+    opacity: 0; transition: opacity 1.5s ease; pointer-events: none;
+    border: 1px solid rgba(108,255,160,0.18);
+  }
+  #ecg.on { opacity: 1; }
+  #tag { position: fixed; top: 26px; left: 0; right: 0; text-align: center; z-index: 5;
+    color: rgba(230,238,248,.85); font-family: ui-monospace, Consolas, monospace;
+    font-size: 12px; letter-spacing: .55em; user-select: none; opacity: 0; transition: opacity 1.5s ease; }
+  #tag.on { opacity: 1; }
+  #intro { position: fixed; inset: 0; background: #000; z-index: 10; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: #cfd9ea;
+    font-family: ui-monospace, Consolas, monospace; letter-spacing: .45em; font-size: 13px;
+    transition: opacity 1.2s ease; user-select: none; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="tag">HYBRID&nbsp;REPLAY&nbsp;×&nbsp;HDR</div>
+<div id="hud"></div>
+<canvas id="ecg" width="300" height="86"></canvas>
+<div id="intro">CLICK&nbsp;TO&nbsp;BEGIN</div>
+<script type="module" src="hybrid.mjs"></script>
+</body>
+</html>

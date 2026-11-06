@@ -1,0 +1,15 @@
+{
+  "id": "galaxy-scene",
+  "name": "Galaxy Scene",
+  "category": "3d-visual",
+  "status": "working",
+  "entry": "start.bat",
+  "readme": "README.md",
+  "tags": ["threejs", "particles", "webgl", "visual-impact", "morph"],
+  "stages": [3, 4],
+  "input": "?shape=galaxy|ding|horse&beat=1 参数组合；或自有水密 mesh 走 prep/ 烘焙管线产出自定义形状",
+  "output": "本地双击即开的粒子场景页（http://localhost:8899），可整页嵌 iframe 或截图进作品",
+  "use_when": "作品需要 30 秒内抓住评委的 3D 视觉冲击；开场/转场页；文物/器物粒子化叙事",
+  "not_for": "需要后端逻辑的工具类项目；严格还原原站品牌视觉（版权见 NOTICE）",
+  "integration_time": "~2h（换自定义形状+调相机 preset）"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "cn-dev-cheatsheets",
+  "name": "CN Dev Cheatsheets",
+  "category": "reference",
+  "status": "working",
+  "entry": "cheatsheets/windows-pits.md",
+  "readme": "README.md",
+  "tags": ["windows", "encoding", "api", "deploy", "pitfalls"],
+  "stages": [2, 4],
+  "input": "无（查阅型组件）",
+  "output": "可抄的命令与选路决策（坑→症状→正解）",
+  "use_when": "命令行为怪/被墙/调国产API/部署验收前，任何阶段遇到环境问题先查卡",
+  "not_for": "Linux/macOS 环境；需要系统教学而非速查的场景",
+  "integration_time": "0（翻开即用）"
+}

@@ -49,6 +49,30 @@ What it does:
 - Download only kept assets
 - Export a regeneration pack for the next round
 
+### 2. `galaxy-scene`
+
+- Path: [components/galaxy-scene](./components/galaxy-scene)
+- Type: three.js particle scene (galaxy / bronze ding / winged horse)
+- Status: working
+
+双击 start.bat 即开。32768 粒子烘焙回放 + 光管线，支持任意 mesh 经 prep/ 管线烘成粒子形态、心跳节律模式。视觉冲击类作品的现成底座。
+
+### 3. `cn-dev-cheatsheets`
+
+- Path: [components/cn-dev-cheatsheets](./components/cn-dev-cheatsheets)
+- Type: reference cards
+- Status: working
+
+国内 Windows 环境三张速查卡：Windows 坑手册、国产 API/链上 RPC/代理速查、部署与验收配方。
+
+### 4. `color-system-cheatsheet`
+
+- Path: [components/color-system-cheatsheet](./components/color-system-cheatsheet)
+- Type: design reference cards
+- Status: working
+
+配色与排版经验卡：等明度体系、NIO 字重经验、PPT 白底衬线基线与雷区清单。
+
 ## Playbook
 
 [playbook/](./playbook/README.md) 是比赛作战手册：来了一个比赛，三步开工——填画像卡 → 判型（十型之一，复合型拼接）→ 取对应 flow。七阶段是阶段库（每张卡有输入/输出契约和退出条件），十条 flow 覆盖：现场 48h / 线上 2-4 周 / 路演答辩 / 实物打印 / 调研报告 / **数模 72h / 创新创业 BP / 设计征集 / 晋级制作品赛 / AI 内容创作**。打完一仗回 `playbook/cases/` 补一卡复盘，教训固化回阶段卡。
