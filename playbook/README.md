@@ -5,7 +5,7 @@
 ## 三步开工
 
 1. **填画像卡**（阶段 0）——把规则变成结构化信息，格式雷区前置暴露
-2. **判型**——对照十型特征，确定比赛属于哪一类（复合型按拼法取多条）
+2. **判型**——对照十五型特征，确定比赛属于哪一类（复合型按拼法取多条）
 3. **取对应 flow**——按 `flows/` 里那条流程文件走，它引用 `stages/` 的阶段卡并声明裁剪规则
 
 ## 阶段库（积木）
@@ -44,7 +44,17 @@
 | UC9 晋级制作品赛 | [flow-multi-round.md](flows/flow-multi-round.md) | 每轮赛后回写，禁推倒重来 |
 | UC10 AI 内容创作 | [flow-ai-content.md](flows/flow-ai-content.md) | 批量抽优，提示词留档 |
 
-复合型比赛串行拼：如"线上初审 BP + 晋级路演" = UC7 → UC3；"校→省→国"每轮 = UC9 包一层 mini UC2/UC3。
+赛制特色型（UC11-15）：
+
+| 型 | 流程文件 | 一句话特征 |
+|---|---|---|
+| UC11 数据竞赛 | [flow-data-competition.md](flows/flow-data-competition.md) | 只信本地 CV，提交买信息 |
+| UC12 命题平台型 | [flow-platform-mandated.md](flows/flow-platform-mandated.md) | 平台踩坑侦察前置，坑留档成复利 |
+| UC13 成果报奖 | [flow-award-application.md](flows/flow-award-application.md) | 条款-证据对照表，口径全篇一致 |
+| UC14 学术论文 | [flow-academic-paper.md](flows/flow-academic-paper.md) | 提交即启动 rebuttal 预案 |
+| UC15 策展展示 | [flow-exhibition.md](flows/flow-exhibition.md) | 动线即叙事，台账是真相源 |
+
+复合型比赛串行拼：如"线上初审 BP + 晋级路演" = UC7 → UC3；"校→省→国"每轮 = UC9 包一层 mini UC2/UC3；课程展示/讲座 = UC3 变体（见其 flow 文件内说明）。
 
 ## 契约原则
 
