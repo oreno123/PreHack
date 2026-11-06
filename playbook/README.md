@@ -5,7 +5,7 @@
 ## 三步开工
 
 1. **填画像卡**（阶段 0）——把规则变成结构化信息，格式雷区前置暴露
-2. **判型**——对照五型特征，确定比赛属于哪一类
+2. **判型**——对照十型特征，确定比赛属于哪一类（复合型按拼法取多条）
 3. **取对应 flow**——按 `flows/` 里那条流程文件走，它引用 `stages/` 的阶段卡并声明裁剪规则
 
 ## 阶段库（积木）
@@ -22,7 +22,9 @@
 | 5 | [交付物](stages/5-deliverables.md) | demo+交付清单 | 逐项交付物 | 格式逐字对过 |
 | 6 | [提交](stages/6-submit.md) | 交付物全家福 | 回执+自查表全绿 | 自查表全绿才提交 |
 
-## 五条 Flow（比赛型 → 流程）
+## Flow 库（比赛型 → 流程）
+
+按交付形态分（UC1-5）：
 
 | 型 | 流程文件 | 一句话特征 |
 |---|---|---|
@@ -31,6 +33,18 @@
 | UC3 路演答辩 | [flow-pitch-defense.md](flows/flow-pitch-defense.md) | 演示脚本与讲稿是主战场 |
 | UC4 实物打印 | [flow-physical-print.md](flows/flow-physical-print.md) | 打印失败缓冲前置 |
 | UC5 调研报告 | [flow-research-report.md](flows/flow-research-report.md) | skills 主力，数据纪律 |
+
+专项赛型（UC6-10）：
+
+| 型 | 流程文件 | 一句话特征 |
+|---|---|---|
+| UC6 数模 72h | [flow-math-modeling-72h.md](flows/flow-math-modeling-72h.md) | 论文骨架先行，摘要定生死 |
+| UC7 创新创业 BP | [flow-bp-startup.md](flows/flow-bp-startup.md) | 叙事线一页讲清，市场验证重于开发 |
+| UC8 设计征集 | [flow-design-contest.md](flows/flow-design-contest.md) | 参照先行、小样先行 |
+| UC9 晋级制作品赛 | [flow-multi-round.md](flows/flow-multi-round.md) | 每轮赛后回写，禁推倒重来 |
+| UC10 AI 内容创作 | [flow-ai-content.md](flows/flow-ai-content.md) | 批量抽优，提示词留档 |
+
+复合型比赛串行拼：如"线上初审 BP + 晋级路演" = UC7 → UC3；"校→省→国"每轮 = UC9 包一层 mini UC2/UC3。
 
 ## 契约原则
 
