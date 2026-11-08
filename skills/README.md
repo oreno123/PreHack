@@ -1,26 +1,27 @@
 # Skills 全量备份
 
-> 来源：`~/.claude/skills/`（2026-11-05 快照，共 220 个，已剥除内嵌 .git）
+> 来源：`~/.claude/skills/`（2026-11-05 快照 + 增量，共 221 个，已剥除内嵌 .git）
 > 唯一备份真相源。恢复=把需要的目录复制回 `~/.claude/skills/`。
 
 | Skill | 描述 |
 |---|---|
 | a-b-test-design | Design rigorous A/B tests with hypotheses, variants, metrics, and sample size calculations. |
 | ab-testing | When the user wants to plan, design, or implement an A/B test or experiment, or build a growth exper |
-| academic-pptx | Use this skill whenever the user wants to create or improve a presentation for an academic context � |
+| academic-pptx | Use this skill whenever the user wants to create or improve a presentation for an academic context � |
 | accessibility-audit | Conduct a comprehensive accessibility audit against WCAG guidelines with severity ratings and remedi |
 | accessibility-test-plan | Create accessibility testing plans covering assistive technologies and WCAG criteria. |
 | ad-creative | When the user wants to generate, iterate, or scale ad creative — headlines, descriptions, primary  |
 | ads | When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), L |
 | aesthetic-usability | Apply the Aesthetic-Usability Effect — visually consistent, polished interfaces are perceived as m |
 | affinity-diagram | Organize qualitative research data into an affinity diagram with themes, clusters, and insight state |
+| agensi-free-tools | 查Agensi市场免费data工具：finnhub实时股价/基本面、tinyfish论文检索、YouTube搜索、B2B公司/人/邮箱查询与计数。官方key零配置，$0余额可用 |
 | ai-seo | When the user wants to optimize content for AI search engines, get cited by LLMs, or appear in AI-ge |
 | analytics | When the user wants to set up, improve, or audit analytics tracking and measurement. Also use when t |
 | animation-principles | Apply animation principles to UI motion for purposeful, polished interactions. |
 | animation-quality-gate | Validate Blender animation attempts before accepting them by rendering contact sheets, checking silh |
 | aso | When the user wants to audit or optimize an App Store or Google Play listing. Also use when the user |
 | atlas-uv-fitting | Detect texture-atlas regions and map each source part to its own UV rectangle or projected UV surfac |
-| biz-analysis-pro | Use when participating in business analysis competitions (全国大学生商业分析大赛/商业� |
+| biz-analysis-pro | Use when participating in business analysis competitions (全国大学生商业分析大赛/商业� |
 | blender-animation | Animate objects, cameras, lights, and properties in Blender — keyframes, F-curves, easing (Bezier, |
 | blender-cameras | Set up Blender cameras with cinematic intent — focal length, depth of field (f-stop / focus object |
 | blender-export | Export Blender scenes to glTF/GLB (web/AR), FBX (game engines), OBJ (universal), USD (VFX pipelines) |
@@ -82,7 +83,7 @@
 | dispatching-parallel-agents | Use when facing 2+ independent tasks that can be worked on without shared state or sequential depend |
 | documentation-template | Generate structured documentation templates for components, patterns, or guidelines within a design  |
 | doherty-threshold | Apply the Doherty Threshold — keep system response times under 400ms to maintain user flow and per |
-| domain-scout | 领域速览侦察 skill。用于用户想快速了解一个新领域/新行业/新技术时：输� |
+| domain-scout | 领域速览侦察 skill。用于用户想快速了解一个新领域/新行业/新技术时：输� |
 | emails | When the user wants to create or optimize an email sequence, drip campaign, automated email flow, or |
 | empathy-map | Build a 4-quadrant empathy map (Says, Thinks, Does, Feels) to synthesize user research into actionab |
 | error-handling-ux | Design error prevention, detection, and recovery experiences. |
@@ -105,7 +106,7 @@
 | gsap-scrolltrigger | Official GSAP skill for ScrollTrigger — scroll-linked animations, pinning, scrub, triggers. Use wh |
 | gsap-timeline | Official GSAP skill for timelines — gsap.timeline(), position parameter, nesting, playback. Use wh |
 | gsap-utils | Official GSAP skill for gsap.utils — clamp, mapRange, normalize, interpolate, random, snap, toArra |
-| guizang-ppt-skill | 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字� |
+| guizang-ppt-skill | 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字� |
 | handoff-spec | Create developer handoff specifications with measurements, behaviors, assets, and edge cases. |
 | heuristic-evaluation | Conduct expert heuristic evaluations using Nielsen's heuristics and domain-specific criteria. |
 | hicks-law | Apply Hick's Law to reduce decision time by limiting the number of simultaneous choices presented to |
@@ -117,7 +118,7 @@
 | img2threejs | Turn an object or character reference image into a quality-gated, animation-ready procedural Three.j |
 | information-architecture | Design the structure, hierarchy, and navigation model for a product's content and features. |
 | interview-script | Create a structured user interview script with warm-up, core exploration, and wrap-up sections. Use  |
-| jianying-editor | 剪映 (JianYing) AI自动化剪辑的高级封装 API (JyWrapper)，提供开箱即用的 Python � |
+| jianying-editor | 剪映 (JianYing) AI自动化剪辑的高级封装 API (JyWrapper)，提供开箱即用的 Python � |
 | jobs-to-be-done | Map user Jobs-to-Be-Done with functional, emotional, and social dimensions plus outcome expectations |
 | journey-map | Create an end-to-end user journey map with stages, touchpoints, emotions, pain points, and opportuni |
 | landmark-fit-repair | Validate and repair source-locked Blender models using named landmarks such as leaf tips, shell corn |
@@ -126,7 +127,7 @@
 | law-of-proximity | Apply the Law of Proximity to group related elements through spatial relationships. |
 | layout-grid | Define responsive layout grid systems with columns, gutters, margins, and breakpoint behavior. |
 | lead-magnets | When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. |
-| learn-anything-skill | 面向“学习任何知识”的通用导师型 skill。用于用户想学习新主题、制定学� |
+| learn-anything-skill | 面向“学习任何知识”的通用导师型 skill。用于用户想学习新主题、制定学� |
 | loading-states | Design loading, skeleton, and progressive content reveal patterns. |
 | localization-design | Design interfaces that adapt gracefully to multiple languages, writing directions, and cultural cont |
 | marketing-ideas | When the user needs marketing ideas, inspiration, or strategies for their SaaS or software product.  |
@@ -152,7 +153,7 @@
 | orthographic-registration | Register front, side, back, and top orthographic reference views into a shared Blender coordinate co |
 | output-skill | Overrides default LLM truncation behavior. Enforces complete code generation, bans placeholder patte |
 | pattern-library | Structure a pattern library entry with problem context, solution pattern, usage examples, and relate |
-| pattern-to-vessel | 任意纹样卡 → 青铜器 3D 浮雕交互页。两步把一张纹样图片（回纹/云雷/饕� |
+| pattern-to-vessel | 任意纹样卡 → 青铜器 3D 浮雕交互页。两步把一张纹样图片（回纹/云雷/饕� |
 | paywalls | When the user wants to create or optimize in-app paywalls, upgrade screens, upsell modals, or featur |
 | popups | When the user wants to create or optimize popups, modals, overlays, slide-ins, or banners for conver |
 | powerpoint | Create and manipulate Microsoft PowerPoint presentations (.pptx files). Use for creating slides, pre |
@@ -186,7 +187,7 @@
 | service-blueprint | Map the end-to-end service delivery system including frontstage actions, backstage processes, and su |
 | signup | When the user wants to optimize signup, registration, account creation, or trial activation flows. A |
 | site-architecture | When the user wants to plan, map, or restructure their website's page hierarchy, navigation, URL str |
-| slide-deck | Claude Code 幻灯片生成器 — 基于 34 套精美 HTML 模板，按调性匹配选模板、替� |
+| slide-deck | Claude Code 幻灯片生成器 — 基于 34 套精美 HTML 模板，按调性匹配选模板、替� |
 | sms | When the user wants to plan, build, or optimize SMS or MMS marketing — including welcome flows, ab |
 | social | When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twit |
 | soft-skill | Teaches the AI to design like a high-end agency. Defines the exact fonts, spacing, shadows, card str |
@@ -220,7 +221,7 @@
 | visual-hierarchy | Establish clear visual hierarchy through size, weight, color, spacing, and positioning. |
 | vlog-auto-edit | AI Agent自动剪辑旅行Vlog的完整工作流。从原始素材到成品视频，系统级只需f |
 | von-restorff-effect | Apply the Von Restorff Effect to make the most important element distinctly different from its surro |
-| weread-skills | 微信读书助手 — 搜索书籍、管理书架、查看笔记划线、浏览书评、阅读统� |
+| weread-skills | 微信读书助手 — 搜索书籍、管理书架、查看笔记划线、浏览书评、阅读统� |
 | wireframe-spec | Specify wireframe layouts with content priority, component placement, and annotation. |
 | wireframe-to-3d | Convert 2D orthographic wireframe PNG drawings to 3D Blender models exported as glTF/GLB. Use this s |
 | writing-plans | Use when you have a spec or requirements for a multi-step task, before touching code |
